@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Orbitron:wght@400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: poppins;
+}
+
+.profile-container {
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    width: 250px;
+    height: calc(100% - 40px); 
+    background-color: rgb(188, 188, 234);
+    padding: 20px;
+    border-right: 5px solid rgb(0, 0, 70);
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture img {
+    width: 100px;
+    height: 100px;
+
+    max-width: 150px; 
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: block;
+    border: 3px solid white;
+}
+
+.profile-details h2 {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.profile-details p {
+    font-size: 1.0rem;
+    margin-bottom: 10px;
+    color: #000000;
+    line-height: 1.5;
+    word-wrap: break-word;
+    background-color: rgb(255, 255, 255);
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.profile-details p::before {
+    content: attr(data-icon); 
+    margin-right: 8px;
+}
+
+
+.profile-container:hover {
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.change-password {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-change-password {
+  display: inline-block;
+  padding: 10px 20px;
+  background: rgb(0, 0, 70); 
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Arial', sans-serif;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn-change-password:hover {
+  background-color: #555; 
+}
+
+
+
+.profileData-container {
+    position: absolute; 
+    top: 0; 
+    left: 320px; 
+    right: 20px;
+    width: max-content; 
+    height: calc(100% - 40px);
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+
+.table-container {
+    max-width: 1000px;
+    margin:auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+    
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: rgb(188, 188, 234);
+    color: #000000;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+}
+
+th {
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+
+tbody tr:hover {
+    background-color: #e9f5ff;
+}
+
+.status-completed {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-not-completed {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.malpractice-yes {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+caption{
+    font-size: 18px;
+    font-weight: bold;
+    padding: 1px;
+    background-color: rgba(188, 209, 234, 0.723);
+    color: #000000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+}
+
+
+
+
+
+
+
+
+
+
+

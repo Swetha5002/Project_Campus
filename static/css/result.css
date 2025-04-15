@@ -1,0 +1,94 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: rgba(240, 240, 240, 0.822);
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; 
+    position: relative;
+}
+
+#result-card {
+    background-color:  rgb(112, 112, 187) ;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.result-info {
+    margin: 20px 0;
+    font-size: 1.1em;
+    color: #000000;
+    text-align: left;
+}
+
+.result-info p {
+    margin-bottom: 10px;
+}
+
+.feedback {
+    margin-top: 30px;
+    font-size: 1.2em;
+    color: #ffffff;
+}
+
+.feedback p {
+    font-weight: normal;
+}
+
+.actions {
+    margin-top: 30px;
+}
+
+.btn {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.retry-btn {
+    background-color: #f44336;
+}
+
+.retry-btn:hover {
+    background-color: #e53935;
+}
+
+#feedback-text {
+    margin-top: 15px;
+    font-style: italic;
+    color: #fff;
+}
+
