@@ -1,0 +1,74 @@
+<!-- Top Navigation Bar -->
+ <nav class="navbar navbar-expand-lg top-navbar">
+    <div class="container-fluid">
+        <div class="mx-auto text-center px-3">
+            <h2 class="mb-0 college-title college-main-title">VELAMMAL COLLEGE OF ENGINEERING AND TECHNOLOGY</h2>
+            <h5 class="mb-0 college-title college-sub-title">Department of Electronics and Communication Engineering
+            </h5>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark main-navbar sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            {% load static %}
+            <img id="vcet_logo" src="{% static 'images/Vcet_logo.png' %}" alt="VCET Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                        <i class="bi bi-house-door me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'materials' %}active{% endif %}" href="{% url 'materials' %}">
+                        <i class="bi bi-journal-bookmark me-1"></i> Materials
+                    </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'assessments' %}active{% endif %}" href="{% url 'assessments' %}">
+                        <i class="bi bi-clipboard-check me-1"></i> Assessments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">
+                        <i class="bi bi-person-circle me-1"></i> Profile
+                    </a>
+                </li>
+                {% if request.user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/">
+                        <i class="bi bi-gear me-1"></i> Admin
+                    </a>
+                </li>
+                {% endif %}
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
+                        <i class="bi bi-info-circle me-1"></i> About
+                    </a>
+                </li>
+            </ul>
+    <div class="d-flex">
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post" class="d-flex align-items-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light me-2"><i class="bi bi-box-arrow-right me-1"></i> Logout ({{ request.user.username }})</button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline-light me-2"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i> Signup</a>
+        {% endif %}
+    </div>
+        </div>
+    </div>
+</nav>
+<!-- End of Navigation Bar -->

@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% include 'components/links.html' %}
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <div class="vcet-bg">
+        <div class="container">
+            <h1 class="section-title">Edit Profile</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="mb-3">
+                    <label for="coding_platform_name" class="form-label">Coding Platform Name</label>
+                    {{ form.coding_platform_name }}
+                </div>
+                <div class="mb-3">
+                    <label for="coding_platform_link" class="form-label">Coding Platform Link</label>
+                    {{ form.coding_platform_link }}
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    {% include 'components/footer.html' %}
+</body>
+
+</html>

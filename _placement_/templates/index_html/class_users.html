@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class {{ batch_year }} - Users</title>
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% include 'components/links.html' %}
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <div class="vcet-bg">
+        <div class="container">
+            <h1 class="section-title">Class {{ batch_year }} - Users</h1>
+            <ul class="list-group">
+                {% for user in users %}
+                <li class="list-group-item">
+                    <a href="{% url 'view_profile' user.id %}" class="text-decoration-none">
+                        {{ user.name or user.username }}
+                    </a>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-center">No users found in this class.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% include 'components/footer.html' %}
+</body>
+
+</html>

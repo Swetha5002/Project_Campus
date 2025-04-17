@@ -1,0 +1,35 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+}
+
+#header {
+    background-color: #27374D;
+    color: white;
+    padding: 10px 20px;
+}
+
+#header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.module h2 {
+    background-color: #9DB2BF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+button, input[type="submit"] {
+    background-color: #27374D;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #526D82;
+}

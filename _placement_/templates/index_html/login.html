@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VCET - ECE</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'images/favicon.jpeg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body onload="showSection('home')" style="background: white;">
+
+    <nav class="navbar background1">        
+        <div class="logo">
+            <img src="{% static 'images/Vcet_logo.png' %}" alt="VCET Logo">
+        </div>
+        <div class="center">
+        <h2>VELAMMAL COLLEGE OF ENGINEERING AND TECHNOLOGY</h2>
+        <h5>Department of Electronics and Communication Engineering</h5>
+        </div>
+
+        <div>
+            
+        </div>
+        <a href="{% url 'home' %}" class="fullscreen-btn" style="height: max-content; width: max-content; padding: 5px; background-color : rgb(0, 0, 70); color: rgb(255, 255, 255); border: none; border-radius: 5px; text-decoration:none">
+            Back
+        </a>
+
+    </nav>
+
+    <div class="content_border">
+        <div class="login-wrapper">
+            <!-- login.html -->
+
+            <div class="login-card">
+                <h2 style="font-family: poppins;">Login</h2>
+                <form method='POST' action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    
+                    <button type="submit" class="btn">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="{% static 'js/base.js' %}"></script>
+</html>

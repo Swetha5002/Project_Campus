@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    {% include 'components/links.html' %}
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <div class="vcet-bg">
+        <div class="container">
+            <h1 class="section-title">About</h1>
+            <p>Content for the about page goes here.</p>
+        </div>
+    </div>
+    {% include 'components/footer.html' %}
+</body>
+
+</html>

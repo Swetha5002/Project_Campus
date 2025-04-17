@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,504 +6,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VCET - ECE Department</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --vcet-dark: #27374D;
-            --vcet-gray: #526D82;
-            --vcet-teal: #9DB2BF;
-            --vcet-light: #DDE6ED;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #ffffff;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .top-navbar {
-            background: var(--vcet-dark);
-            color: white;
-            padding: 10px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .main-navbar {
-            background: var(--vcet-teal);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-link {
-            color: var(--vcet-dark) !important;
-            font-weight: 500;
-            padding: 8px 15px !important;
-            margin: 0 3px;
-            transition: all 0.3s;
-            border-radius: 5px;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background: var(--vcet-light);
-            transform: translateY(-2px);
-            color: var(--vcet-dark) !important;
-        }
-
-        #vcet_logo {
-            width: 30px;
-            height: 30px;
-            transition: transform 0.3s;
-        }
-
-        .vcet-bg {
-            padding: 40px 0;
-            min-height: calc(100vh - 160px);
-            background-color: #DDE6ED;
-            
-        }
-
-        .section-title {
-            color: var(--vcet-dark);
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-            font-weight: 700;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: var(--vcet-teal);
-            margin: 10px auto;
-            border-radius: 2px;
-        }
-
-        .story-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 25px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: none;
-            height: 100%;
-        }
-
-        .story-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .story-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .story-card:hover .story-image {
-            transform: scale(1.05);
-        }
-
-        .story-content {
-            padding: 20px;
-        }
-
-        .story-title {
-            color: var(--vcet-dark);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .story-company {
-            color: var(--vcet-gray);
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .story-package {
-            color: #28a745;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .story-description {
-            color: var(--vcet-gray);
-            font-size: 0.9rem;
-            margin: 15px 0;
-        }
-
-        .read-more-btn {
-            background: var(--vcet-teal);
-            border: none;
-            padding: 8px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-            color: white;
-        }
-
-        .read-more-btn:hover {
-            background: var(--vcet-dark);
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1050;
-            backdrop-filter: blur(5px);
-        }
-
-        .popup-container {
-            background-color: white;
-            width: 90%;
-            max-width: 900px;
-            border-radius: 15px;
-            padding: 25px;
-            display: flex;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            flex-direction: column;
-        }
-
-        @media (min-width: 992px) {
-            .popup-container {
-                flex-direction: row;
-            }
-        }
-
-        .popup-left {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .popup-right {
-            flex: 2;
-            padding: 15px;
-        }
-
-        .popup-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--vcet-dark);
-            transition: transform 0.3s;
-            background: rgba(255, 255, 255, 0.8);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .close-btn:hover {
-            transform: rotate(90deg);
-            color: #dc3545;
-        }
-
-        .time-date {
-            color: white;
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .college-title {
-            color: white;
-            text-align: center;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-        }
-
-        .college-main-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-        .college-sub-title {
-            font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .college-main-title {
-                font-size: 1.1rem;
-            }
-
-            .college-sub-title {
-                font-size: 0.8rem;
-            }
-
-            .time-date {
-                font-size: 0.8rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        .fullscreen-btn {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            transition: transform 0.3s;
-        }
-
-        .fullscreen-btn:hover {
-            transform: scale(1.2);
-        }
-
-        .navbar-brand img {
-            height: 50px;
-            transition: transform 0.3s;
-        }
-
-        .navbar-brand:hover img {
-            transform: scale(1.1);
-        }
-
-        /* Footer Styles */
-        footer {
-            background-color: var(--vcet-dark);
-            color: var(--vcet-light);
-            padding: 30px 0;
-            text-align: center;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .footer-links a {
-            color: var(--vcet-light);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--vcet-teal);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .footer-social a {
-            color: var(--vcet-light);
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .footer-social a:hover {
-            color: var(--vcet-teal);
-        }
-
-        .footer-copyright {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .github-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--vcet-light);
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
-
-        .github-link:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: var(--vcet-teal);
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% include 'components/links.html' %}
 </head>
 
 <body>
-    <!-- Top Navigation Bar -->
-    <nav class="navbar navbar-expand-lg top-navbar">
-        <div class="container-fluid">
-            <div class="mx-auto text-center px-3">
-                <h2 class="mb-0 college-title college-main-title">VELAMMAL COLLEGE OF ENGINEERING AND TECHNOLOGY</h2>
-                <h5 class="mb-0 college-title college-sub-title">Department of Electronics and Communication Engineering
-                </h5>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark main-navbar sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                {% load static %}
-                <img id="vcet_logo" src="{% static 'images/Vcet_logo.png' %}" alt="VCET Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="materials.html"><i class="bi bi-journal-bookmark me-1"></i>
-                            Materials</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="assessments.html"><i class="bi bi-clipboard-check me-1"></i>
-                            Assessments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}"><i class="bi bi-person-circle me-1"></i> Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin.html"><i class="bi bi-gear me-1"></i> Admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html"><i class="bi bi-info-circle me-1"></i> About</a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <a href="login.html" class="btn btn-outline-light me-2"><i
-                            class="bi bi-box-arrow-in-right me-1"></i> Login</a>
-                    <a href="signup.html" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i> Signup</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    {% include 'components/header.html' %}
 
     <!-- Main Content -->
     <div class="vcet-bg">
-
-        <div class="profile-container">
-            <div class="profile-picture">
-                {% load static %}
-                <img src="{% static 'images/user.png' %}" alt="Profile Picture">
-            </div>
-            <div class="profile-details">
-                <h2>{{ student.name }}</h2>
-                <p data-icon="#️⃣"><strong>University No :</strong> {{ student.university_number }}</p>
-                <p data-icon="#️⃣"><strong>Roll No :</strong> {{ student.username }}</p>
-                <p data-icon="🏫"><strong>Batch :</strong> {{ student.batch_year }} {{ student.batch.department }}</p>
-                <p data-icon="🎂"><strong>DOB :</strong> {{ student.date_of_birth }}</p>
-                <p data-icon="📧"><strong>Email :</strong> {{ student.email }}</p>
-                <p data-icon="📞"><strong>Phone :</strong> {{ student.phone_number }}</p>
-                <p data-icon="📊"><strong>Average Mark :</strong> {{ student.average_percentage }}%</p>
-        
-            </div>
-            
-        </div>
-        <div class="profileData-container">
-            
-            <div class="table-container">
-                <table>
-                    <caption>Test History</caption>
-                    <thead>
-                        <tr>
-                            <th>Sl.No</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Test Code</th>
-                            <th>Test Name</th>
-                            <th>Score</th>
-                            <th>Status of Completion</th>
-                            <th>Malpractice</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for result in results %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ result.date_of_exam }}</td>
-                            <td>{{ result.time }}</td>
-                            <td>{{ result.test_code }}</td>
-                            <td>{{ result.test_title|truncatechars:25}}</td>
-                            <td>{{ result.percentage }}</td>
-                            <td class="status-{{ result.status|lower }}">{{ result.status }}</td>
-                            <td>
-                            {% if result.status == 'Malpractice' %}
-                                Yes
-                            {% else %}
-                                No
-                            {% endif %}
-                                </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    
-    
-    </div>
-
-    <footer>
         <div class="container">
-            <div class="footer-content">
-                
-                <a href="https://github.com/your-repo" class="github-link" target="_blank">
-                    <i class="bi bi-github"></i> GitHub Repository
-                </a>
-                
-                <div class="footer-copyright">
-                    &copy; 2023 VCET - Electronics and Communication Engineering Department
+            <!-- Enhanced Profile Section -->
+            <div class="profile-container">
+                <button class="profile-edit-btn" title="Edit Profile">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <div class="profile-content">
+                    <div class="profile-picture">
+                        {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="Profile Picture" class="img-fluid">
+                        {% else %}
+                        <img src="{% static 'images/profile_no.png' %}" alt="Profile" class="img-fluid">
+
+                        {% endif %}
+                    </div>
+                    <div class="profile-details">
+                        <h2>
+                            <a href="{% url 'class_details' user.batch_year %}" class="text-decoration-none">
+                                {{ request.user.username }}
+                            </a>
+                            <span class="badge bg-success">
+                                <a href="{% url 'class_details' user.batch_year %}"
+                                    class="text-white text-decoration-none">
+                                    {{ user.batch_year }}
+                                </a>
+                            </span>
+                        </h2>
+
+                        <div class="profile-info">
+                            <div class="profile-info-item">
+                                <i class="bi bi-person-badge"></i>
+                                <strong>University No:</strong> {{ request.user.university_number }}
+                            </div>
+                            <div class="profile-info-item">
+                                <i class="bi bi-building"></i>
+                                <strong>Batch:</strong>
+                                <a href="{% url 'class_details' user.batch_year %}" class="text-decoration-none">
+                                    {{ user.batch_year }}
+                                </a>
+                            </div>
+                            <div class="profile-info-item">
+                                <i class="bi bi-calendar-event"></i>
+                                <strong>DOB:</strong> {{ user.date_of_birth }}
+                            </div>
+                            <div class="profile-info-item">
+                                <i class="bi bi-envelope"></i>
+                                <strong>Email:</strong> {{ user.email }}
+                            </div>
+                            <div class="profile-info-item">
+                                <i class="bi bi-telephone"></i>
+                                <strong>Phone:</strong> {{ user.phone_number }}
+                            </div>
+                            <div class="profile-info-item">
+                                <i class="bi bi-graph-up"></i>
+                                <strong>CGPA:</strong> {{ user.cgpa }}
+                            </div>
+                        </div>
+
+                        <!-- Coding Profiles Section -->
+                        <div class="coding-profiles">
+                            <h4><i class="bi bi-code-square me-2"></i>Coding Profiles</h4>
+                            <div class="coding-platforms">
+                                {% for platform in user.code_platforms %}
+                                <div class="platform-card">
+                                    <div class="platform-name">{{ platform.name }}</div>
+                                    <a href="{{ platform.link }}" class="platform-link" target="_blank">
+                                        View Profile <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test History Section -->
+            <div class="profileData-container">
+                <div class="table-container">
+                    <caption><i class="bi bi-clock-history me-2"></i>Test History</caption>
+                    <table class="table table-hover">
+
+                        <thead>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Test Code</th>
+                                <th>Test Name</th>
+                                <th>Score</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in user.results.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ result.date_of_exam }}</td>
+                                <td>{{ result.time }}</td>
+                                <td>{{ result.test_code }}</td>
+                                <td>{{ result.test_title }}</td>
+                                <td>{{ result.percentage }}%</td>
+                                <td class="status-{{ result.status|lower }}">{{ result.get_status_display }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No test history available.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Google Fonts - Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% include 'components/footer.html' %}
 
-    <script>
-    </script>
 </body>
+<script>
+    const edit_btn = document.querySelector('.profile-edit-btn');
+        edit_btn.addEventListener('click', function() {
+            window.location.href = "{% url 'edit_profile' %}";
+        });
+</script>
 
 </html>

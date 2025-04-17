@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>test sign up</title>
+
+    <link rel="icon" href="{% static 'images/favicon.jpeg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sign_up.css' %}">
+</head>
+
+<body>
+
+    <body onload="showSection('home')" style="background: white;">
+
+        <nav class="navbar background1">
+
+            <div class="timeDate">
+                <div id="liveTime"></div>
+                <div id="liveDate"></div>
+            </div>
+
+            <div class="logo">
+                <img src="{% static 'images/Vcet_logo.png' %}" alt="VCET Logo">
+            </div>
+            <div class="center">
+                <h2>VELAMMAL COLLEGE OF ENGINEERING AND TECHNOLOGY</h2>
+                <h5>Department of Electronics and Communication Engineering</h5>
+            </div>
+
+            <div>
+
+            </div>
+            <a href="{% url 'home' %}" class="fullscreen-btn"
+                style="height: max-content; width: max-content; padding: 5px; background-color : rgb(0, 0, 70); color: rgb(255, 255, 255); border: none; border-radius: 5px; text-decoration:none">
+                Back
+            </a>
+
+        </nav>
+
+        <div class="content_border">
+            <div class="container">
+                <div class="form-container bg-light p-4 rounded">
+                    <h1 class="title">Sign Up</h1>
+                    <form method="post" name="form-save" id="form-save" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <table class="table table-bordered table-form">
+                            {% for field in form %}
+                            <tr>
+                                <td>{{ field.label_tag }}</td>
+                                <td>
+                                    {{ field }}
+
+                                    {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                    <div class="error-container">
+                                        {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </table>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Submit</button>
+                    </form>
+
+                    {% if messages %}
+                    <div class="messages mt-3">
+                        {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div> <!-- Display success messages -->
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script src="{% static 'js/base.js' %}"></script>
+
+</html>

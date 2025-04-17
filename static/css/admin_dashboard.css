@@ -1,0 +1,39 @@
+.admin-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.admin-card h3 {
+    font-size: 1.5rem;
+    color: var(--vcet-dark);
+    margin-bottom: 10px;
+}
+
+.admin-card p {
+    font-size: 1.2rem;
+    color: var(--vcet-gray);
+    margin-bottom: 15px;
+}
+
+.admin-card .btn {
+    background: var(--vcet-teal);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.admin-card .btn:hover {
+    background: var(--vcet-dark);
+    color: white;
+}

@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% include 'components/links.html' %}
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+    <div class="vcet-bg">
+        <div class="container">
+            <div class="profile-container">
+                <div class="profile-content">
+                    <div class="profile-picture">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile Picture" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Picture" class="img-fluid">
+                        {% endif %}
+                    </div>
+                    <div class="profile-details">
+                        <h2>{{ user.username }}</h2>
+                        <div class="profile-info">
+                            <div class="profile-info-item">
+                                <strong>University No:</strong> {{ user.university_number }}
+                            </div>
+                            <div class="profile-info-item">
+                                <strong>Batch:</strong> {{ user.batch_year }}
+                            </div>
+                            <div class="profile-info-item">
+                                <strong>Email:</strong> {{ user.email }}
+                            </div>
+                            <div class="profile-info-item">
+                                <strong>Phone:</strong> {{ user.phone_number }}
+                            </div>
+                            <div class="profile-info-item">
+                                <strong>CGPA:</strong> {{ user.cgpa }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="test-history">
+                    <h3>Test History</h3>
+                    {% if user.test_history %}
+                        <ul>
+                            {% for test in user.test_history %}
+                                <li>
+                                    <strong>{{ test.name }}</strong> - Score: {{ test.score }} / {{ test.total_score }} 
+                                    ({{ test.date|date:"M d, Y" }})
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No test history available.</p>
+                    {% endif %}
+                </div>
+                <div class="additional-details">
+                    <h3>Additional Details</h3>
+                    <div class="links">
+                        <h4>Links</h4>
+                        <ul>
+                            {% if user.linkedin_url %}
+                                <li><a href="{{ user.linkedin_url }}" target="_blank">LinkedIn</a></li>
+                            {% endif %}
+                            {% if user.github_url %}
+                                <li><a href="{{ user.github_url }}" target="_blank">GitHub</a></li>
+                            {% endif %}
+                            {% if user.portfolio_url %}
+                                <li><a href="{{ user.portfolio_url }}" target="_blank">Portfolio</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="coding-profiles">
+                        <h4>Coding Profiles</h4>
+                        <ul>
+                            {% if user.hackerrank_url %}
+                                <li><a href="{{ user.hackerrank_url }}" target="_blank">HackerRank</a></li>
+                            {% endif %}
+                            {% if user.codechef_url %}
+                                <li><a href="{{ user.codechef_url }}" target="_blank">CodeChef</a></li>
+                            {% endif %}
+                            {% if user.leetcode_url %}
+                                <li><a href="{{ user.leetcode_url }}" target="_blank">LeetCode</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'components/footer.html' %}
+</body>
+
+</html>
