@@ -6,11 +6,27 @@
 }
 
 .top-navbar {
-    background: var(--vcet-dark);
+    background: linear-gradient(135deg, var(--vcet-dark), var(--vcet-gray), var(--vcet-dark));
+    background-size: 200% 200%;
     color: white;
     padding: 10px 0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    animation: GradientFlow 8s ease infinite;
+    transition: all 0.3s ease;
 }
+
+@keyframes GradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 
 .main-navbar {
     background: var(--vcet-teal);
@@ -41,8 +57,8 @@
 }
 
 .nav-link.active:hover {
-    background: var(--vcet-teal);
-    color: white !important;
+    background: var(--vcet-light);
+    color: var(--vcet-dark) !important;  /* Changed color to var(--vcet-dark) */
     border-bottom: 2px solid var(--vcet-dark);
 }
 

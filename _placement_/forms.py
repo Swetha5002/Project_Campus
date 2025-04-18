@@ -1,47 +1,65 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .models import User, Class
+from .models import User
 import json
 
 class PaperCodeForm(forms.Form):
     paper_code = forms.CharField(max_length=10, required=True)
+from django import forms
+from .models import User
 
 class UserForm(forms.ModelForm):
-    coding_platform_name = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Platform Name (e.g., LeetCode)'})
-    )
-    coding_platform_link = forms.URLField(
-        required=False,
-        widget=forms.URLInput(attrs={'placeholder': 'Platform Link (e.g., https://leetcode.com/user)'})
-    )
-
-    class_field = forms.ModelChoiceField(
-        queryset=Class.objects.all(),
-        required=True,
-        label="Class",
-        help_text="Select the class for the user."
-    )
-
     class Meta:
         model = User
-        fields = [
-            'profile_image', 'username', 'email', 'name', 'university_number', 
-            'batch_year', 'section', 'date_of_birth', 'phone_number', 'gender', 
-            'cgpa', 'average_percentage', 'linkedin_link', 'code_platforms'
-        ]
+        fields = ['username', 'name', 'email', 'batch', 'section', 'profile_image', 
+                 'university_number', 'date_of_birth', 'phone_number', 'gender',
+                 'cgpa', 'linkedin_link', 'code_platforms']
         widgets = {
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'university_number': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter university number'
+            }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'label': 'Roll Number',
+                'placeholder': 'Enter roll number',
+            }),
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter full name'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter email address'
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter phone number'
+            }),
+            'date_of_birth': forms.DateInput(attrs={
+                'type': 'date', 
+                'class': 'form-control', 
+                'placeholder': 'Select date of birth'
+            }),
+            'batch_year': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter batch year'
+            }),
+            'section': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter section'
+            }),
+            'gender': forms.Select(attrs={
+                'class': 'form-control', 
+            }),
         }
-
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add any custom initialization here
+        
     def save(self, commit=True):
-        instance = super().save(commit=False)
-        name = self.cleaned_data.get('coding_platform_name')
-        link = self.cleaned_data.get('coding_platform_link')
-        if name and link:
-            instance.code_platforms.append({'name': name, 'link': link})
+        user = super().save(commit=False)
         if commit:
-            instance.save()
-        return instance
-
-
+            user.save()
+        return user

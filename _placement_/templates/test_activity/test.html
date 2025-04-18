@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - {{paper.paper_code}}</title>
+    <link rel="icon" href="{% static 'images/favicon.jpeg' %}" type="image/x-icon">
+    {% include '../components/links.html' %}
+    <link rel="stylesheet" href="{% static 'css/test.css' %}">
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">🌑</button>
+
+    <!-- Test Instructions Section -->
+    <div id="instructions">
+        <h2>📋 Test Instructions</h2>
+        <p>Please read the instructions carefully before starting the test.</p>
+        <ul>
+            <li>🔒 <b>Stay in Full-Screen Mode:</b> Do not exit full-screen mode during the test.</li>
+            <li>⏳ <b>Time Limit:</b> The test will end automatically when the timer reaches zero.</li>
+            <li>✅ <b>Track Answers:</b> Answered questions will turn <span style="color: #4CAF50; font-weight: bold;">green</span>.</li>
+            <li>❓ <b>Mark Doubts:</b> Doubt-marked questions will turn <span style="color: #ff9800; font-weight: bold;">orange</span>.</li>
+            <li>⚠️ <b>Malpractice:</b> Exiting full-screen mode will result in test termination.</li>
+            <li>💾 <b>Submit:</b> Ensure all answers are saved before clicking submit.</li>
+        </ul>
+        <button id="start-btn" onclick="startTest()" aria-label="Start Test">
+             Start Test
+        </button>
+    </div>
+
+    <!-- Test Section (Hidden Initially) -->
+    <div id="test-container" class="container">
+        <div id="test">
+            <div id="questions">
+                <form id="test-form" method="post" action="{% url 'result' paper.paper_code %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="time_taken" id="time-taken" value="0">
+                    <input type="hidden" name="malpractice" id="malpractice" value="false">
+                    {% for question in questions %}
+                        <div class="question-card" id="question-card-{{ forloop.counter }}">
+                            <div class="question-header">
+                                <p>Question {{ forloop.counter }}:</p>
+                                {% if question.question_image %}
+                                    <img src="{{ question.question_image.url }}" alt="Question image">
+                                {% endif %}
+                                <pre><code>{{ question.question_text }}</code></pre>
+                            </div>
+                            <ul class="question-options list-group">
+                                <li class="option-item list-group-item border-0 p-0 mb-2">
+                                  <input class="btn-check"
+                                         type="radio"
+                                         id="q{{ question.id }}_a"
+                                         name="question_{{ question.id }}"
+                                         value="A"
+                                         onclick="markAnswered('{{ question.id }}')">
+                                  <label class="btn btn-outline-primary w-100 text-start py-3 px-4 rounded-3 d-flex align-items-center"
+                                         for="q{{ question.id }}_a">
+                                    <span class="radio-indicator me-3 d-flex align-items-center justify-content-center">
+                                      <span class="radio-circle"></span>
+                                    </span>
+                                    {{ question.option_A }}
+                                  </label>
+                                </li>
+                              
+                                <li class="option-item list-group-item border-0 p-0 mb-2">
+                                  <input class="btn-check"
+                                         type="radio"
+                                         id="q{{ question.id }}_b"
+                                         name="question_{{ question.id }}"
+                                         value="B"
+                                         onclick="markAnswered('{{ question.id }}')">
+                                  <label class="btn btn-outline-primary w-100 text-start py-3 px-4 rounded-3 d-flex align-items-center"
+                                         for="q{{ question.id }}_b">
+                                    <span class="radio-indicator me-3 d-flex align-items-center justify-content-center">
+                                      <span class="radio-circle"></span>
+                                    </span>
+                                    {{ question.option_B }}
+                                  </label>
+                                </li>
+                              
+                                <li class="option-item list-group-item border-0 p-0 mb-2">
+                                  <input class="btn-check"
+                                         type="radio"
+                                         id="q{{ question.id }}_c"
+                                         name="question_{{ question.id }}"
+                                         value="C"
+                                         onclick="markAnswered('{{ question.id }}')">
+                                  <label class="btn btn-outline-primary w-100 text-start py-3 px-4 rounded-3 d-flex align-items-center"
+                                         for="q{{ question.id }}_c">
+                                    <span class="radio-indicator me-3 d-flex align-items-center justify-content-center">
+                                      <span class="radio-circle"></span>
+                                    </span>
+                                    {{ question.option_C }}
+                                  </label>
+                                </li>
+                              
+                                <li class="option-item list-group-item border-0 p-0 mb-2">
+                                  <input class="btn-check"
+                                         type="radio"
+                                         id="q{{ question.id }}_d"
+                                         name="question_{{ question.id }}"
+                                         value="D"
+                                         onclick="markAnswered('{{ question.id }}')">
+                                  <label class="btn btn-outline-primary w-100 text-start py-3 px-4 rounded-3 d-flex align-items-center"
+                                         for="q{{ question.id }}_d">
+                                    <span class="radio-indicator me-3 d-flex align-items-center justify-content-center">
+                                      <span class="radio-circle"></span>
+                                    </span>
+                                    {{ question.option_D }}
+                                  </label>
+                                </li>
+                              </ul>
+                              
+                              
+                              <style>
+                                .radio-indicator {
+                                  display: none;
+
+                                  width: 1px;
+                                  height: 1px;
+                                  border: 2px solid #dee2e6;
+                                  border-radius: 50%;
+                                  transition: all 0.3s;
+                                }
+                                
+                                .btn-check:checked + label .radio-indicator {
+                                  border-color: #000000;
+                                }
+                                
+                                .radio-circle {
+                                  width: 10px;
+                                  height: 10px;
+                                  background: transparent;
+                                  border-radius: 50%;
+                                  transition: all 0.3s;
+                                }
+                                
+                                .btn-check:checked + label .radio-circle {
+                                  background: #ff0000;
+                                }
+                                
+                                .btn-check:checked + label {
+                                  background-color: rgba(13, 110, 253, 0.1);
+                                  color: inherit;
+                                }
+                              </style>
+                            <button type="button" id="doubt-btn-{{ forloop.counter }}" class="doubt-btn" onclick="toggleDoubt('{{ forloop.counter }}')">
+                                ❓ Mark as Doubt
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <div class="pagination-buttons">
+                        <button type="button" id="prev-btn" onclick="showPreviousQuestion()" disabled>Previous</button>
+                        <button type="button" id="next-btn" onclick="showNextQuestion()">Next</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Test Info Section -->
+            <div id="test-info">
+                <div id="timer">Time Remaining: <span id="time">00:00</span></div>
+                <div id="test-detail">
+                    <span>Name: {{ user.name }}</span>
+                    <hr>
+                    <span>Test Code: {{ paper.paper_code }}</span>
+                    <hr>
+                    <span>Test Name: {{ paper.paper_title }}</span>
+                    <hr>
+                    <span>No. of Qs: {{ paper.no_of_qs }}</span>
+                </div>
+                <div class="question-boxes" id="question-boxes-container">
+                    <!-- Dynamic question boxes will be added here -->
+                </div>
+                
+                {% if attend %}
+                    <h3 style="text-align: center; color: #f44336;">🔒 Locked 🔒</h3>
+                {% else %}
+                    <button type="submit" form="test-form" id="submit-btn" disabled>Submit</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply saved theme or default to light
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌑';
+            localStorage.setItem('theme', currentTheme);
+        }
+        
+        // Initialize theme
+        applyTheme();
+        
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+        });
+
+        // Test Functionality
+        let currentQuestion = 1;
+        const totalQuestions = parseInt("{{ paper.no_of_qs }}", 10) || 0;
+        const questionCards = document.querySelectorAll('.question-card');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const questionBoxesContainer = document.getElementById('question-boxes-container');
+        const answeredQuestions = new Set();
+        const doubtQuestions = new Set();
+        let timerInterval, malpracticeInterval;
+        let formSubmitted = false;
+
+        // Initialize question boxes
+        function initializeQuestionBoxes() {
+            questionBoxesContainer.innerHTML = '';
+            for (let i = 1; i <= totalQuestions; i++) {
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.id = `box-${i}`;
+                box.textContent = i;
+                box.addEventListener('click', () => showQuestion(i));
+                questionBoxesContainer.appendChild(box);
+            }
+        }
+
+        // Show a specific question
+        function showQuestion(questionNumber) {
+            if (questionNumber < 1 || questionNumber > totalQuestions) return;
+
+            questionCards.forEach(card => card.classList.remove('active'));
+            document.getElementById(`question-card-${questionNumber}`).classList.add('active');
+
+            currentQuestion = questionNumber;
+            updatePaginationButtons();
+            highlightQuestionBox(questionNumber);
+        }
+
+        // Update pagination buttons state
+        function updatePaginationButtons() {
+            prevBtn.disabled = currentQuestion === 1;
+            nextBtn.disabled = currentQuestion === totalQuestions;
+        }
+
+        // Highlight the current question box
+        function highlightQuestionBox(questionNumber) {
+            document.querySelectorAll('.question-boxes .box').forEach(box => {
+                box.classList.remove('active');
+            });
+            document.getElementById(`box-${questionNumber}`).classList.add('active');
+        }
+
+        // Show next question
+        function showNextQuestion() {
+            showQuestion(currentQuestion + 1);
+        }
+
+        // Show previous question
+        function showPreviousQuestion() {
+            showQuestion(currentQuestion - 1);
+        }
+
+        // Mark question as answered
+        function markAnswered(questionId) {
+            answeredQuestions.add(questionId);
+            updateBoxStatus(questionId);
+            checkAllAnswered();
+        }
+
+        // Toggle doubt status
+        function toggleDoubt(questionId) {
+            const doubtBtn = document.getElementById(`doubt-btn-${questionId}`);
+            
+            if (doubtQuestions.has(questionId)) {
+                doubtQuestions.delete(questionId);
+                doubtBtn.textContent = '❓ Mark as Doubt';
+                doubtBtn.classList.remove('doubt');
+            } else {
+                doubtQuestions.add(questionId);
+                doubtBtn.textContent = '✅ Remove Doubt';
+                doubtBtn.classList.add('doubt');
+            }
+            updateBoxStatus(questionId);
+        }
+
+        // Update question box status (answered/doubt)
+        function updateBoxStatus(questionId) {
+            const box = document.getElementById(`box-${questionId}`);
+            
+            box.classList.remove('answered', 'doubt');
+            if (doubtQuestions.has(questionId)) {
+                box.classList.add('doubt');
+            } else if (answeredQuestions.has(questionId)) {
+                box.classList.add('answered');
+            }
+        }
+
+        // Check if all questions are answered
+        function checkAllAnswered() {
+            const submitBtn = document.getElementById('submit-btn');
+            if (submitBtn && answeredQuestions.size === totalQuestions) {
+                submitBtn.disabled = false;
+                submitBtn.classList.add('enabled');
+            }
+        }
+
+        // Start the test
+        function startTest() {
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('test-container').style.display = 'block';
+            initializeQuestionBoxes();
+            showQuestion(1);
+            startTimer();
+            enterFullScreen();
+            setupMalpracticeCheck();
+            setupVisibilityChangeHandler();
+            setupKeyboardNavigation();
+        }
+
+        // Timer functionality
+        let timeLimit = parseInt("{{ paper.time_limit }}", 10) * 60 || 3600;
+        let timeTaken = 0;
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timeLimit > 0) {
+                    timeLimit--;
+                    timeTaken++;
+                    document.getElementById('time-taken').value = timeTaken;
+                    updateTimerDisplay();
+                } else {
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLimit / 60);
+            const seconds = timeLimit % 60;
+            document.getElementById('time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Fullscreen functionality
+        function enterFullScreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => {
+                    console.error('Fullscreen error:', err);
+                });
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        // Malpractice check
+        function setupMalpracticeCheck() {
+            malpracticeInterval = setInterval(() => {
+                if (!document.fullscreenElement && 
+                    !document.webkitFullscreenElement && 
+                    !document.mozFullScreenElement && 
+                    !document.msFullscreenElement) {
+                    reportMalpractice();
+                }
+            }, 1000);
+        }
+
+        function reportMalpractice() {
+            if (!formSubmitted) {
+                document.getElementById('malpractice').value = 'true';
+                document.getElementById('test-form').submit();
+                formSubmitted = true;
+            }
+        }
+
+        // Tab visibility change handler
+        function setupVisibilityChangeHandler() {
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'hidden' && !formSubmitted) {
+                    reportMalpractice();
+                }
+            });
+        }
+
+        // Keyboard navigation
+        function setupKeyboardNavigation() {
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowLeft') {
+                    showPreviousQuestion();
+                } else if (event.key === 'ArrowRight') {
+                    showNextQuestion();
+                }
+            });
+        }
+
+        // End test
+        function endTest() {
+            clearInterval(timerInterval);
+            clearInterval(malpracticeInterval);
+            if (!formSubmitted) {
+                document.getElementById('test-form').submit();
+                formSubmitted = true;
+            }
+        }
+    </script>
+</body>
+</html>

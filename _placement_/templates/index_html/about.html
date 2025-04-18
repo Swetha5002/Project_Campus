@@ -5,18 +5,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <title>About Campus Project</title>
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
     <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% include 'components/links.html' %}
+    <style>
+        .vcet-bg {
+            background-color: #f8fafc;
+            padding: 2rem 0 4rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .section-title {
+            color: var(--vcet-dark);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--vcet-teal);
+            border-radius: 2px;
+        }
+        
+        .timeline-container {
+            max-width: 1000px;
+            margin: 3rem auto 0;
+            padding: 0 1rem;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--vcet-teal), var(--vcet-gray));
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: rgba(157, 178, 191, 0.3);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.4rem;
+            top: 1.5rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 50%;
+            background: var(--vcet-dark);
+            border: 3px solid var(--vcet-teal);
+            z-index: 2;
+            
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: var(--vcet-gray);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .timeline-date i {
+            color: var(--vcet-teal);
+            width: 1.1rem;
+            text-align: center;
+        }
+        
+        .timeline-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--vcet-dark);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .timeline-item p {
+            color: var(--vcet-gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--vcet-dark);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .project-link:hover {
+            background: var(--vcet-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        
+        .note-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--vcet-teal);
+            padding: 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 3rem 0;
+        }
+        
+        .note-box h4 {
+            color: var(--vcet-dark);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .note-box h4 i {
+            color: var(--vcet-teal);
+        }
+        
+        .note-box p {
+            color: var(--vcet-gray);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        
+        .documentation-section {
+            margin: 3rem 0 2rem;
+        }
+        
+        .section-subtitle {
+            color: var(--vcet-dark);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .documentation-section p {
+            color: var(--vcet-gray);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .timeline {
+                padding-left: 2rem;
+            }
+            
+            .timeline::before {
+                left: 1rem;
+            }
+            
+            .timeline-item::before {
+                left: -2.4rem;
+            }
+            
+            .project-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
     {% include 'components/header.html' %}
     <div class="vcet-bg">
         <div class="container">
-            <h1 class="section-title">About</h1>
-            <p>Content for the about page goes here.</p>
+            <h1 class="section-title">Project - CAMPUS</h1>
+
+            <p style="color: var(--vcet-gray); line-height: 1.6; max-width: 800px; margin-bottom: 2rem;">
+                A comprehensive testing system with malpractice detection capabilities and integrated placement management for all students.
+            </p>
+
+            <div style="background: rgba(157, 178, 191, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 2rem; display: inline-block;">
+                <h3 style="color: var(--vcet-dark); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-circle" style="color: #4CAF50; font-size: 0.7rem;"></i>
+                    <span>Currently Live</span>
+                </h3>
+                <p style="color: var(--vcet-gray); margin-bottom: 0;">Version 2.0 in production</p>
+            </div>
+            
+            <div class="timeline-container">
+                <div class="timeline">
+                    <!-- Project Creation -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            7th January 2023
+                        </div>
+                        <h3 class="timeline-title">Project Initiation</h3>
+                        <p>Basic Malpractice Free Testing System</p>
+                    </div>
+                    
+                    <!-- Version 1 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            June 2023
+                        </div>
+                        <h3 class="timeline-title">Version Beta Released</h3>
+                        <p>Initial release with core features including student registration,  and basic analytics.</p>
+                        <div class="links-container">
+                            <a href="https://github.com/yourusername/campus-v1" class="project-link" target="_blank">
+                                <i class="fab fa-github"></i> GitHub Repo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Version 2 -->
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            March 2024
+                        </div>
+                        <h3 class="timeline-title">Version Alpha Released</h3>
+                        <p>Enhanced version with improved UI/UX, additional modules for attendance tracking, and real-time notifications.</p>
+                        <div class="links-container">
+                            <a href="https://github.com/yourusername/campus-v2" class="project-link" target="_blank">
+                                <i class="fab fa-github"></i> GitHub Repo
+                            </a>
+                            <a href="http://your-college-server/campus-v2" class="project-link">
+                                <i class="fas fa-external-link-alt"></i> App Link
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <h4><i class="fas fa-info-circle"></i> Access Information</h4>
+                    <p>This application is currently hosted on the college intranet and is only accessible within the campus network. For external access, please use the college VPN.</p>
+                </div>
+                
+                <div class="documentation-section">
+                    <h3 class="section-subtitle">Project Documentation</h3>
+                    <p>Comprehensive documentation including setup guide, API references, and user manuals are available:</p>
+                    <a href="{% static 'docs/campus_documentation.pdf' %}" class="project-link" download>
+                        <i class="fas fa-file-pdf"></i> Download Documentation
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     {% include 'components/footer.html' %}

@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if malpractice %}Malpractice Detected{% else %}Test Result{% endif %}</title>
+    <style>
+        :root {
+            --vcet-dark: #27374D;
+            --vcet-gray: #526D82;
+            --vcet-teal: #9DB2BF;
+            --vcet-light: #DDE6ED;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--vcet-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #result-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid var(--vcet-dark);
+        }
+
+        #result-card[style*="background: red"] {
+            background: #d32f2f !important;
+            color: white;
+            border-color: #b71c1c;
+        }
+
+        h1 {
+            color: var(--vcet-dark);
+            margin-bottom: 20px;
+        }
+
+        #result-card[style*="background: red"] h1 {
+            color: white;
+        }
+
+        .result-info {
+            text-align: left;
+            margin-bottom: 20px;
+            background: var(--vcet-teal);
+            padding: 15px;
+            border-radius: 5px;
+            color: var(--vcet-dark);
+        }
+
+        #result-card[style*="background: red"] .result-info {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .result-info p {
+            margin: 10px 0;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--vcet-teal);
+            border-radius: 5px;
+            text-align: left;
+            color: var(--vcet-dark);
+        }
+
+        #result-card[style*="background: red"] .feedback {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .actions {
+            margin-top: 20px;
+        }
+
+        #countdown {
+            font-style: italic;
+            color: var(--vcet-gray);
+        }
+
+        #result-card[style*="background: red"] #countdown {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        strong {
+            color: var(--vcet-dark);
+        }
+
+        #result-card[style*="background: red"] strong {
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            #result-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="result-card" {% if malpractice %}style="background: red;"{% endif %}>
+        <h1>{% if malpractice %}Malpractice Detected{% else %}Test Result{% endif %}</h1>
+        <div class="result-info">     
+            <p><strong>Test Code:</strong> {{ paper.paper_code }}</p>
+            <p><strong>Test Name:</strong> {{ paper.paper_title }}</p>
+            <p><strong>Your Score:</strong> {{ score }} / {{ total_marks }}</p>
+            <p><strong>Your Percentage:</strong> {{ percentage }}%</p>
+            <p><strong>Time Taken:</strong> {{ time_taken }} seconds</p>
+        </div>
+
+        {% if not malpractice %}
+        <div class="feedback">
+            <p><strong>Feedback:</strong></p>
+            <div id="feedback-text">
+                {% if percentage >= 80 %}
+                <p>Excellent work! Keep up the great performance.</p>
+                {% elif percentage >= 50 %}
+                <p>Good job! But there's room for improvement.</p>
+                {% else %}
+                <p>Needs improvement. Don't worry, practice makes perfect!</p>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="feedback">
+            <p><strong>Feedback:</strong></p>
+            <div id="feedback-text">
+                <p>Malpractice will not be tolerated. If you want to take test again, contact the admin.</p>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="actions">
+            <p id="countdown"></p>
+        </div>
+    </div>
+
+    <script>
+        // Clear browser history
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(-3);
+        };
+
+        let time_out = "{{ redirect_timeout }}";
+
+        if ('{{malpractice}}' == 'True') {
+            time_out = 3;
+        }
+
+        let countdown = time_out;
+        const countdownElement = document.getElementById('countdown');
+        countdownElement.innerText = `Redirecting in ${countdown} seconds...`;
+
+        const interval = setInterval(() => {
+            countdown -= 1;
+            countdownElement.innerText = `Redirecting in ${countdown} seconds...`;
+            if (countdown <= 0) {
+                clearInterval(interval);
+                window.location.href = "{% url 'profile' %}"; 
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
