@@ -8,6 +8,9 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 import os
 
 def get_current_year():
@@ -22,7 +25,7 @@ class User(AbstractUser):
     
     # Personal Information
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
-    university_number = models.PositiveIntegerField(unique=True, blank=True, null=True)
+    university_number = models.PositiveBigIntegerField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     batch = models.ForeignKey(
         'Batch',
@@ -68,12 +71,11 @@ class User(AbstractUser):
     
     # Professional Information
     linkedin_link = models.URLField(max_length=200, blank=True, null=True)
-    code_platforms = models.JSONField(
-        default=list,
-        blank=True,
-        null=True,
-        help_text="List of dictionaries containing 'platform_name' and 'profile_link'"
-    )
+    
+    # Coding Platform Links (separate fields)
+    leetcode_link = models.URLField(max_length=200, blank=True, null=True, verbose_name="LeetCode Profile")
+    codechef_link = models.URLField(max_length=200, blank=True, null=True, verbose_name="CodeChef Profile")
+    hackerrank_link = models.URLField(max_length=200, blank=True, null=True, verbose_name="HackerRank Profile")
 
     class Meta:
         verbose_name = 'User'
@@ -102,7 +104,7 @@ class Batch(models.Model):
         IT = 'IT', 'Information Technology'
         EEE = 'EEE', 'Electrical and Electronics Engineering'
         AIDS = 'AIDS', 'Artificial Intelligence and Data Science'
-    
+ 
     current_year = get_current_year()
     YEAR_RANGE = range(current_year , current_year + 5)
     End_YEAR_CHOICES = [(r, r) for r in YEAR_RANGE]
@@ -135,6 +137,7 @@ class Batch(models.Model):
         verbose_name_plural = 'Batches'
         ordering = ['department', 'end_year']
         unique_together = ['department', 'end_year']
+
     
     def __str__(self):
         return f"{self.department} {self.end_year}"

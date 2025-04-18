@@ -1,21 +1,24 @@
 from datetime import timezone
+from datetime import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import User, StudentResults, PlacementStories  # Added Class model
+from .models import User, StudentResults, PlacementStories, Section  # Added Class model and Section
 from .forms import PaperCodeForm, UserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 import csv
 
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])  # Set the password
+            user.save()
             messages.success(request, 'Signup successful! Please log in.')
-            return redirect('home')
+            return redirect('login')
     else:
         form = UserForm()
     return render(request, 'index_html/signup.html', {'form': form})
@@ -63,6 +66,29 @@ def manage_classes(request):
 def about(request):
     return render(request, 'index_html/about.html')
 
+
+
+def notice(request, paper_code):
+    """
+    Displays the test notice page and checks if the user is eligible to take the test.
+    """
+    paper = get_object_or_404(QuestionPaper, paper_code=paper_code)
+
+    if not request.user.is_authenticated:
+        messages.error(request, 'You need to log in to access the test.')
+        return redirect('login')
+
+    if StudentResults.objects.filter(user=request.user, test_code=paper_code, attended=True).exists():
+        messages.warning(request, 'You have already attended this test.')
+        return redirect('/#assessments')
+
+    return render(request, 'test_activity/notice.html', {'paper': paper})
+
+from django.shortcuts import render, get_object_or_404
+from .models import StudentResults, QuestionPaper 
+
+from django.utils import timezone
+from .models import QuestionPaper  # Make sure this is imported
 
 
 def notice(request, paper_code):
