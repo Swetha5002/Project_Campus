@@ -2,7 +2,7 @@ from datetime import timezone
 from datetime import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import User, StudentResults, PlacementStories, Section  # Added Class model and Section
+from .models import MistakenQuestion, User, StudentResults, PlacementStories, Section  # Added Class model and Section
 from .forms import PaperCodeForm, UserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -146,11 +146,30 @@ def result(request, paper_code):
     if request.method == 'POST':
         if request.user.is_superuser:
             return redirect('home')
-        score = sum(
-            question.mark
-            for question in paper.questions.all()
-            if request.POST.get(f'question_{question.id}') == question.correct_option
-        )
+        
+        score = 0
+        mistaken_questions = []
+        
+        for question in paper.questions.all():
+            user_answer = request.POST.get(f'question_{question.id}')
+            if user_answer == question.correct_option:
+                score += question.mark
+            else:
+                # Store mistaken question
+                mistaken_questions.append(
+                    MistakenQuestion(
+                        user=request.user,
+                        question=question,
+                        test_code=paper_code,
+                        selected_option=user_answer or 'Not answered',
+                        correct_option=question.correct_option
+                    )
+                )
+        
+        # Bulk create mistaken questions
+        if mistaken_questions:
+            MistakenQuestion.objects.bulk_create(mistaken_questions)
+        
         time_taken = int(request.POST.get('time_taken', 0))
         total_marks = paper.total_marks or 0
         percentage = (score / total_marks) * 100 if total_marks > 0 else 0
@@ -181,7 +200,28 @@ def result(request, paper_code):
         return render(request, 'test_activity/result.html', context)
 
     messages.error(request, 'Invalid request.')
-    return redirect('index')
-
+    return redirect('home')
 def batch(request):
     return render(request, 'index_html/batch.html')
+
+def test_mistakes(request, paper_code):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    paper = get_object_or_404(QuestionPaper, paper_code=paper_code)
+    mistaken_questions = MistakenQuestion.objects.filter(
+        user=request.user,
+        test_code=paper_code
+    ).select_related('question')
+    
+    context = {
+        'paper': paper,
+        'mistaken_questions': mistaken_questions,
+    }
+    return render(request, 'test_activity/test_mistakes.html', context)
+
+
+def get_sections(request):
+    batch_id = request.GET.get('batch_id')
+    sections = Section.objects.filter(batch_id=batch_id).values('id', 'name')
+    return JsonResponse({'sections': list(sections)})
