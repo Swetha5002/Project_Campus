@@ -1,20 +1,23 @@
+from datetime import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import User, StudentResults, PlacementStories, Class  # Added Class model
-from .forms import UserForm
+from .models import User, StudentResults, PlacementStories, Section  # Added Class model and Section
+from .forms import PaperCodeForm, UserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 import csv
 
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])  # Set the password
+            user.save()
             messages.success(request, 'Signup successful! Please log in.')
-            return redirect('home')
+            return redirect('login')
     else:
         form = UserForm()
     return render(request, 'index_html/signup.html', {'form': form})
@@ -62,22 +65,102 @@ def manage_classes(request):
 def about(request):
     return render(request, 'index_html/about.html')
 
-@login_required
-def class_users(request, batch_year):
-    users = User.objects.filter(batch_year=batch_year)
-    return render(request, 'index_html/class_users.html', {'users': users, 'batch_year': batch_year})
+
+
+def notice(request, paper_code):
+    """
+    Displays the test notice page and checks if the user is eligible to take the test.
+    """
+    paper = get_object_or_404(QuestionPaper, paper_code=paper_code)
+
+    if not request.user.is_authenticated:
+        messages.error(request, 'You need to log in to access the test.')
+        return redirect('login')
+
+    if StudentResults.objects.filter(user=request.user, test_code=paper_code, attended=True).exists():
+        messages.warning(request, 'You have already attended this test.')
+        return redirect('/#assessments')
+
+    return render(request, 'test_activity/notice.html', {'paper': paper})
+
+from django.shortcuts import render, get_object_or_404
+from .models import StudentResults, QuestionPaper 
+
+from django.utils import timezone
+from .models import QuestionPaper  # Make sure this is imported
 
 @login_required
-def class_details(request, batch_year):
-    users = User.objects.filter(batch_year=batch_year)
-    class_name = f"Batch {batch_year}"
-    start_year = batch_year
-    end_year = batch_year + 4  # Assuming a 4-year program
-    student_count = users.count()
-    return render(request, 'index_html/class_details.html', {
-        'class_name': class_name,
-        'start_year': start_year,
-        'end_year': end_year,
-        'student_count': student_count,
-        'users': users,
-    })
+def assessments(request):
+    if request.method == 'GET' and 'paper_code' in request.GET:
+        paper_code = request.GET.get('paper_code')
+        try:
+            paper = QuestionPaper.objects.get(paper_code=paper_code)
+            if StudentResults.objects.filter(user=request.user, test_code=paper_code, attended=True).exists():
+                messages.warning(request, 'You have already taken this test')
+                return redirect('assessments')
+            request.session['paper_code'] = paper_code
+            return redirect('notice', paper_code=paper_code)
+        except QuestionPaper.DoesNotExist:
+            messages.error(request, 'Invalid test code')
+    
+    return render(request, 'index_html/assessments.html')
+
+def test(request, paper_code):
+    paper = get_object_or_404(QuestionPaper, paper_code=paper_code)
+    attend = StudentResults.objects.filter(user=request.user, test_code=paper_code).exists()
+    context = {
+        'attend': attend,
+        'paper': paper,
+        'questions': paper.questions.all().order_by("?"), 
+    }
+    print(attend)
+    return render(request, 'test_activity/test.html', context)
+
+def result(request, paper_code):
+    paper = get_object_or_404(QuestionPaper, paper_code=paper_code)
+
+    if request.method == 'POST':
+        if request.user.is_superuser:
+            return redirect('home')
+        score = sum(
+            question.mark
+            for question in paper.questions.all()
+            if request.POST.get(f'question_{question.id}') == question.correct_option
+        )
+        time_taken = int(request.POST.get('time_taken', 0))
+        total_marks = paper.total_marks or 0
+        percentage = (score / total_marks) * 100 if total_marks > 0 else 0
+        malpractice = request.POST.get('malpractice', 'false') == 'true'
+
+        StudentResults.objects.update_or_create(
+            user=request.user,
+            test_code=paper_code,
+            defaults={
+                'test_title': paper.paper_title,
+                'percentage': percentage,
+                'attended': True,
+                'status': 'Malpractice' if malpractice else 'Completed',
+                'date_of_exam': timezone.now().date(),
+                'time': timezone.now().time(),
+            }
+        )
+
+        context = {
+            'paper': paper,
+            'score': score,
+            'total_marks': total_marks,
+            'percentage': percentage,
+            'time_taken': time_taken,
+            'malpractice': malpractice,
+            'redirect_timeout': 7,
+        }
+        return render(request, 'test_activity/result.html', context)
+
+    messages.error(request, 'Invalid request.')
+    return redirect('index')
+
+def get_sections(request):
+    batch_id = request.GET.get('batch_id')
+    sections = Section.objects.filter(batch_id=batch_id).values('id', 'name')
+    return JsonResponse({'sections': list(sections)})
+

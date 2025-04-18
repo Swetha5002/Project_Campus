@@ -6,88 +6,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VCET - ECE Department</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
     {% include 'components/links.html' %}
 </head>
 
 <body>
-
     {% include 'components/header.html' %}
 
     <!-- Main Content -->
-    <div class="vcet-bg">
+    <div class="vcet-bg py-4">
         <div class="container">
             <!-- Enhanced Profile Section -->
-            <div class="profile-container">
-                <button class="profile-edit-btn" title="Edit Profile">
+            <div class="profile-container bg-white rounded-4 shadow p-3 p-md-4 mb-4 position-relative">
+                <button class="profile-edit-btn btn btn-primary rounded-circle position-absolute top-0 end-0 m-3" 
+                        title="Edit Profile" onclick="window.location.href=''">
                     <i class="bi bi-pencil"></i>
                 </button>
 
-                <div class="profile-content">
-                    <div class="profile-picture">
-                        {% if user.profile_image %}
-                        <img src="{{ user.profile_image.url }}" alt="Profile Picture" class="img-fluid">
-                        {% else %}
-                        <img src="{% static 'images/profile_no.png' %}" alt="Profile" class="img-fluid">
-
-                        {% endif %}
-                    </div>
-                    <div class="profile-details">
-                        <h2>
-                            <a href="{% url 'class_details' user.batch_year %}" class="text-decoration-none">
-                                {{ request.user.username }}
-                            </a>
-                            <span class="badge bg-success">
-                                <a href="{% url 'class_details' user.batch_year %}"
-                                    class="text-white text-decoration-none">
-                                    {{ user.batch_year }}
-                                </a>
-                            </span>
-                        </h2>
-
-                        <div class="profile-info">
-                            <div class="profile-info-item">
-                                <i class="bi bi-person-badge"></i>
-                                <strong>University No:</strong> {{ request.user.university_number }}
-                            </div>
-                            <div class="profile-info-item">
-                                <i class="bi bi-building"></i>
-                                <strong>Batch:</strong>
-                                <a href="{% url 'class_details' user.batch_year %}" class="text-decoration-none">
-                                    {{ user.batch_year }}
-                                </a>
-                            </div>
-                            <div class="profile-info-item">
-                                <i class="bi bi-calendar-event"></i>
-                                <strong>DOB:</strong> {{ user.date_of_birth }}
-                            </div>
-                            <div class="profile-info-item">
-                                <i class="bi bi-envelope"></i>
-                                <strong>Email:</strong> {{ user.email }}
-                            </div>
-                            <div class="profile-info-item">
-                                <i class="bi bi-telephone"></i>
-                                <strong>Phone:</strong> {{ user.phone_number }}
-                            </div>
-                            <div class="profile-info-item">
-                                <i class="bi bi-graph-up"></i>
-                                <strong>CGPA:</strong> {{ user.cgpa }}
-                            </div>
+                <div class="row g-4">
+                    <!-- Profile Picture Column -->
+                    <div class="col-md-4 text-center p-5">
+                        <div class="profile-picture mb-5">
+                            {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile Picture" 
+                                 class="img-fluid rounded-circle border border-4 border-primary" style="width: 200px; height: 200px; object-fit: cover;">
+                            {% else %}
+                            <img src="{% static 'images/profile_no.png' %}" alt="Profile" 
+                                 class="img-fluid rounded-circle border border-4 border-primary" style="width: 200px; height: 200px; object-fit: cover;">
+                            {% endif %}
                         </div>
+                        <h3 class="profile-name text-dark fw-bold">{{ user.name }}</h3>
+                        <div class="d-flex justify-content-center mt-2">
+                            <span class="badge bg-success fs-6">
+                                {{ user.section }}
+                            </span>
+                        </div>
+                        
+                        <!-- Stats Cards -->
+                        
+                    </div>
 
-                        <!-- Coding Profiles Section -->
-                        <div class="coding-profiles">
-                            <h4><i class="bi bi-code-square me-2"></i>Coding Profiles</h4>
-                            <div class="coding-platforms">
-                                {% for platform in user.code_platforms %}
-                                <div class="platform-card">
-                                    <div class="platform-name">{{ platform.name }}</div>
-                                    <a href="{{ platform.link }}" class="platform-link" target="_blank">
-                                        View Profile <i class="bi bi-box-arrow-up-right"></i>
-                                    </a>
+                    <!-- Profile Details Column -->
+                    <div class="col-md-8">
+                        <div class="profile-details">
+                            <h2 class="text-dark fw-bold border-bottom border-3 border-primary pb-2 d-inline-block">
+                                {{ request.user.username }}
+                            </h2>
+
+                            <div class="row mt-3 g-3 profile-info">
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person-badge me-2 text-secondary"></i>
+                                        <div>
+                                            <strong class="text-secondary">University No:</strong> 
+                                            <span>{{ request.user.university_number }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                {% endfor %}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-calendar-event me-2 text-secondary"></i>
+                                        <div>
+                                            <strong class="text-secondary">DOB:</strong> 
+                                            <span>{{ user.date_of_birth }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-envelope me-2 text-secondary"></i>
+                                        <div>
+                                            <strong class="text-secondary">Email:</strong> 
+                                            <span>{{ user.email }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-telephone me-2 text-secondary"></i>
+                                        <div>
+                                            <strong class="text-secondary">Phone:</strong> 
+                                            <span>{{ user.phone_number }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-graph-up me-2 text-secondary"></i>
+                                        <div>
+                                            <strong class="text-secondary">CGPA:</strong> 
+                                            <span>{{ user.cgpa }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-award me-2 text-secondary"></i>
+                                        <div>
+                                            <strong class="text-secondary">DSA count:</strong> 
+                                            <span>{{ user.dsa_count }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coding Profiles Section -->
+                            <div class="coding-profiles mt-4 pt-3 border-top border-2 border-primary">
+                                <h4 class="text-dark fw-bold mb-4">
+                                    <i class="bi bi-code-square me-2"></i>Coding Profiles
+                                </h4>
+                                <div class="row g-4">
+                                    <!-- LinkedIn Profile -->
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="platform-card linkedin-card h-100 transition-all hover-scale">
+                                            <div class="card-body text-center p-4 rounded-4">
+                                                <div class="icon-wrapper bg-linkedin mb-3 mx-auto">
+                                                    <i class="bi bi-linkedin text-white fs-4"></i>
+                                                </div>
+                                                <h5 class="fw-bold mb-3">LinkedIn</h5>
+                                                {% if user.linkedin_link %}
+                                                <a href="{{ user.linkedin_link }}" class="btn btn-linkedin btn-sm w-75" target="_blank">
+                                                    View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                                {% else %}
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- LeetCode Profile -->
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="platform-card leetcode-card h-100 transition-all hover-scale">
+                                            <div class="card-body text-center p-4 rounded-4">
+                                                <div class="icon-wrapper bg-leetcode mb-3 mx-auto">
+                                                    <i class="bi bi-code-slash text-white fs-4"></i>
+                                                </div>
+                                                <h5 class="fw-bold mb-3">LeetCode</h5>
+                                                {% if user.code_platforms.0 %}
+                                                <a href="{{ user.code_platforms.0.link }}" class="btn btn-leetcode btn-sm w-75" target="_blank">
+                                                    View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                                <p class="small mt-2 mb-0">{{ user.code_platforms.0.problems_solved }} problems solved</p>
+                                                {% else %}
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- GeeksforGeeks Profile -->
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="platform-card gfg-card h-100 transition-all hover-scale">
+                                            <div class="card-body text-center p-4 rounded-4">
+                                                <div class="icon-wrapper bg-gfg mb-3 mx-auto">
+                                                    <i class="bi bi-laptop text-white fs-4"></i>
+                                                </div>
+                                                <h5 class="fw-bold mb-3">GeeksforGeeks</h5>
+                                                {% if user.code_platforms.2 %}
+                                                <a href="{{ user.code_platforms.2.link }}" class="btn btn-gfg btn-sm w-75" target="_blank">
+                                                    View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                                <p class="small mt-2 mb-0">{{ user.code_platforms.2.problems_solved }} problems solved</p>
+                                                {% else %}
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- HackerRank Profile -->
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="platform-card hackerrank-card h-100 transition-all hover-scale">
+                                            <div class="card-body text-center p-4 rounded-4">
+                                                <div class="icon-wrapper bg-hackerrank mb-3 mx-auto">
+                                                    <i class="bi bi-terminal text-white fs-4"></i>
+                                                </div>
+                                                <h5 class="fw-bold mb-3">HackerRank</h5>
+                                                {% if user.code_platforms.3 %}
+                                                <a href="{{ user.code_platforms.3.link }}" class="btn btn-hackerrank btn-sm w-75" target="_blank">
+                                                    View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                                <p class="small mt-2 mb-0">{{ user.code_platforms.3.problems_solved }} problems solved</p>
+                                                {% else %}
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -95,40 +207,53 @@
             </div>
 
             <!-- Test History Section -->
-            <div class="profileData-container">
+            <div class="profileData-container bg-white rounded-4 shadow p-3 p-md-4 mb-4">
                 <div class="table-container">
-                    <caption><i class="bi bi-clock-history me-2"></i>Test History</caption>
-                    <table class="table table-hover">
-
-                        <thead>
-                            <tr>
-                                <th>Sl.No</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Test Code</th>
-                                <th>Test Name</th>
-                                <th>Score</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in user.results.all %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ result.date_of_exam }}</td>
-                                <td>{{ result.time }}</td>
-                                <td>{{ result.test_code }}</td>
-                                <td>{{ result.test_title }}</td>
-                                <td>{{ result.percentage }}%</td>
-                                <td class="status-{{ result.status|lower }}">{{ result.get_status_display }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="7" class="text-center">No test history available.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <h3 class="text-dark fw-bold border-bottom border-3 border-primary pb-2 mb-3">
+                        <i class="bi bi-clock-history me-2"></i>Test History
+                    </h3>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Test Code</th>
+                                    <th>Test Name</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in user.results.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ result.date_of_exam }}</td>
+                                    <td>{{ result.time }}</td>
+                                    <td>{{ result.test_code }}</td>
+                                    <td>{{ result.test_title }}</td>
+                                    <td>{{ result.percentage }}%</td>
+                                    <td class="status-{{ result.status|lower }}">
+                                        {{ result.get_status_display }}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary view-details" 
+                                                data-test-id="{{ result.id }}">
+                                            View <i class="bi bi-chevron-right"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">No test history available.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -136,12 +261,10 @@
 
     {% include 'components/footer.html' %}
 
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/profile.js' %}"></script>
 </body>
-<script>
-    const edit_btn = document.querySelector('.profile-edit-btn');
-        edit_btn.addEventListener('click', function() {
-            window.location.href = "{% url 'edit_profile' %}";
-        });
-</script>
 
 </html>

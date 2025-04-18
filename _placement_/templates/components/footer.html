@@ -1,14 +1,50 @@
-<footer>
+<footer class="site-footer">
     <div class="container">
-        <div class="footer-content">
-            
-            <a href="https://github.com/your-repo" class="github-link" target="_blank">
-                <i class="bi bi-github"></i> GitHub Repository
-            </a>
-            
-            <div class="footer-copyright">
-                &copy; 2023 VCET - Electronics and Communication Engineering Department
-            </div>
+      <div class="footer-bottom">
+        <div class="copyright">
+          &copy; 2024 VCET - Electronics and Communication Engineering Department
         </div>
+        <div class="footer-credits">
+          <span>Project CAMPUS</span>
+          <span class="divider">|</span>
+          <span>Developed by VCET ECE Students</span>
+        </div>
+      </div>
     </div>
-</footer>
+  </footer>
+  
+  <style>
+    .site-footer {
+      background: var(--vcet-dark);
+      color: white;
+      font-size: 0.95rem;
+     
+    }
+  
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .copyright {
+      color: var(--vcet-light);
+    }
+  
+    .footer-credits {
+      display: flex;
+      gap: 0.8rem;
+      color: var(--vcet-light);
+    }
+  
+  
+    @media (max-width: 768px) {
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  </style>
+  

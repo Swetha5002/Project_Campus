@@ -1,47 +1,79 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from .models import User, Class
-import json
+from .models import User, Section
 
 class PaperCodeForm(forms.Form):
     paper_code = forms.CharField(max_length=10, required=True)
 
-class UserForm(forms.ModelForm):
-    coding_platform_name = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Platform Name (e.g., LeetCode)'})
-    )
-    coding_platform_link = forms.URLField(
-        required=False,
-        widget=forms.URLInput(attrs={'placeholder': 'Platform Link (e.g., https://leetcode.com/user)'})
-    )
-
-    class_field = forms.ModelChoiceField(
-        queryset=Class.objects.all(),
-        required=True,
-        label="Class",
-        help_text="Select the class for the user."
+class UserForm(UserCreationForm):  # Inherit from UserCreationForm
+    section = forms.ModelChoiceField(
+        queryset=Section.objects.none(),
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'placeholder': 'Select section'
+        }),
+        required=True
     )
 
     class Meta:
         model = User
         fields = [
-            'profile_image', 'username', 'email', 'name', 'university_number', 
-            'batch_year', 'section', 'date_of_birth', 'phone_number', 'gender', 
-            'cgpa', 'average_percentage', 'linkedin_link', 'code_platforms'
+            'username', 
+            'name', 
+            'email', 
+            'batch', 
+            'section', 
+            'profile_image',
+            'university_number', 
+            'date_of_birth', 
+            'phone_number', 
+            'gender',
+            'password1',  # Add password1
+            'password2',  # Add password2
         ]
         widgets = {
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'batch': forms.Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Select batch'
+            }),
+            'university_number': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter university number'
+            }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter roll number',
+            }),
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter full name'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter email address'
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter phone number'
+            }),
+            'date_of_birth': forms.DateInput(attrs={
+                'type': 'date', 
+                'class': 'form-control', 
+                'placeholder': 'Select date of birth'
+            }),
+            'gender': forms.Select(attrs={
+                'class': 'form-control', 
+            }),
         }
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        name = self.cleaned_data.get('coding_platform_name')
-        link = self.cleaned_data.get('coding_platform_link')
-        if name and link:
-            instance.code_platforms.append({'name': name, 'link': link})
-        if commit:
-            instance.save()
-        return instance
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'batch' in self.data:
+            try:
+                batch_id = int(self.data.get('batch'))
+                self.fields['section'].queryset = Section.objects.filter(batch_id=batch_id).order_by('name')
+            except (ValueError, TypeError):
+                self.fields['section'].queryset = Section.objects.none()
+        elif self.instance.pk and self.instance.batch:
+            self.fields['section'].queryset = Section.objects.filter(batch=self.instance.batch).order_by('name')
 
