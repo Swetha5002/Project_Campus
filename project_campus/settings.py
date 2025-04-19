@@ -151,3 +151,12 @@ LOGOUT_REDIRECT_URL = 'home'
 AUTH_USER_MODEL = '_placement_.User'
 
 
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # e.g., smtp.gmail.com
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'projectcampusecevcet@gmail.com'
+EMAIL_HOST_PASSWORD = 'aqvd nlyd nmdg nuqe'
+DEFAULT_FROM_EMAIL = 'projectcampusecevcet@gmail.com'

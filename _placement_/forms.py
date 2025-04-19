@@ -4,8 +4,6 @@ from .models import User, Section
 
 class PaperCodeForm(forms.Form):
     paper_code = forms.CharField(max_length=10, required=True)
-from django import forms
-from .models import User
 
 class UserForm(UserCreationForm):  # Inherit from UserCreationForm
     section = forms.ModelChoiceField(
@@ -22,7 +20,7 @@ class UserForm(UserCreationForm):  # Inherit from UserCreationForm
         fields = [
             'username', 
             'name', 
-            'email', 
+            'email',  
             'batch', 
             'section', 
             'profile_image',
@@ -30,8 +28,8 @@ class UserForm(UserCreationForm):  # Inherit from UserCreationForm
             'date_of_birth', 
             'phone_number', 
             'gender',
-            'password1',  # Add password1
-            'password2',  # Add password2
+            'password1', 
+            'password2',
         ]
         widgets = {
             'batch': forms.Select(attrs={
@@ -78,4 +76,16 @@ class UserForm(UserCreationForm):  # Inherit from UserCreationForm
                 self.fields['section'].queryset = Section.objects.none()
         elif self.instance.pk and self.instance.batch:
             self.fields['section'].queryset = Section.objects.filter(batch=self.instance.batch).order_by('name')
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('This username is already taken. Please choose a different one.')
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('This email is already registered. Please use a different email address.')
+        return email
 

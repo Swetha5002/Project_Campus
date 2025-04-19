@@ -8,9 +8,6 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.urls import reverse
 import os
 
 def get_current_year():
@@ -27,6 +24,7 @@ class User(AbstractUser):
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     university_number = models.PositiveBigIntegerField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(unique=True, blank=False, null=False)  # Make email unique
     batch = models.ForeignKey(
         'Batch',
         on_delete=models.SET_NULL,
