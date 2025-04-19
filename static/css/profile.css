@@ -11,7 +11,6 @@
     --vcet-hackerrank: #1eb46e;
 }
 
-/* Base Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
@@ -23,7 +22,6 @@ body {
     min-height: calc(100vh - 160px);
 }
 
-/* Profile Container */
 .profile-container {
     position: relative;
     overflow: hidden;
@@ -47,7 +45,7 @@ body {
     margin-bottom: 0.5rem;
 }
 
-/* Stats Cards */
+
 .stat-card {
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -70,12 +68,11 @@ body {
     background: linear-gradient(135deg, #f39c12, #e67e22);
 }
 
-/* Profile Info */
 .profile-info span {
     color: #495057;
 }
 
-/* Coding Profiles Section */
+
 .coding-profiles {
     position: relative;
 }
@@ -96,7 +93,6 @@ body {
     border-radius: 3px;
 }
 
-/* Platform Cards */
 .platform-card {
     border: none;
     border-radius: 12px;
@@ -110,7 +106,6 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Platform Specific Styling */
 .linkedin-card {
     background-color: rgba(10, 102, 194, 0.05);
     border: 1px solid rgba(10, 102, 194, 0.1);
@@ -131,7 +126,6 @@ body {
     border: 1px solid rgba(30, 180, 110, 0.1);
 }
 
-/* Icons */
 .icon-wrapper {
     width: 60px;
     height: 60px;
@@ -158,7 +152,6 @@ body {
     background: linear-gradient(135deg, #1eb46e, #169f5b);
 }
 
-/* Buttons */
 .btn-linkedin {
     background-color: #0a66c2;
     color: white;
@@ -191,7 +184,6 @@ body {
     color: white;
 }
 
-/* Test History Table */
 .table-container {
     overflow: hidden;
 }
@@ -223,7 +215,6 @@ body {
     color: white;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 992px) {
     .platform-card {
         margin-bottom: 1rem;

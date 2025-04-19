@@ -249,10 +249,21 @@ def get_sections(request):
     return JsonResponse({'sections': list(sections)})
 
 
-
 @login_required
 def refresh_dsa_count(request):
-    update_user_dsa_count(request.user)
-    
-    
+    """
+    API endpoint to manually refresh DSA count for current user
+    """
+    try:
+        count = update_user_dsa_count(request.user)
+        return JsonResponse({
+            'success': True,
+            'count': count,
+            'message': 'DSA count updated successfully!',
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Error updating DSA count: {str(e)}'
+        }, status=500)
     
