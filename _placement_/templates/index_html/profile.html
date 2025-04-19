@@ -123,15 +123,6 @@
                                 </div>
                                 
                                 <script>
-                                // Initialize tooltips
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    // Initialize Bootstrap tooltips
-                                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                                    tooltipTriggerList.map(function (tooltipTriggerEl) {
-                                        return new bootstrap.Tooltip(tooltipTriggerEl)
-                                    });
-                                
-                                    // Add click handler for refresh button
                                     document.getElementById('refresh-dsa').addEventListener('click', function() {
                                         const btn = this;
                                         const countSpan = document.getElementById('dsa-count');
@@ -140,38 +131,44 @@
                                         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                                         btn.disabled = true;
                                         
-                                        fetch('{% url "refresh_dsa_count" %}')
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    countSpan.textContent = data.count;
-                                                   
-                                                    btn.innerHTML = '<i class="fas fa-check"></i>';
-                                                    setTimeout(() => {
-                                                        btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-                                                        btn.disabled = false;
-                                                    }, 3000);
-                                                } else {
+                                        fetch('{% url "refresh_dsa_count" %}', {
+                                            headers: {
+                                                'X-Requested-With': 'XMLHttpRequest',
+                                                'Content-Type': 'application/json',
+                                            },
+                                            credentials: 'same-origin'
+                                        })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            if (data.success) {
+                                                btn.innerHTML = '<i class="fas fa-check"></i>';
+                                                setTimeout(() => {
                                                     btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
                                                     btn.disabled = false;
-                                                    
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Error:', error);
-                                                btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-                                                btn.disabled = false;
-                                                
-                                            });
+                                                }, 1000);
+                                            } else {
+                                                throw new Error(data.message);
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                            btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                                            btn.disabled = false;
+                                            alert('Failed to refresh DSA count: ' + error.message);
+                                        });
                                     });
-                                });
-                                </script>
+                                    </script>
                             </div>
 
                             <!-- Coding Profiles Section -->
                             <div class="coding-profiles mt-4 pt-3 border-top border-2 border-primary">
                                 <h4 class="text-dark fw-bold mb-4">
-                                    <i class="bi bi-code-square me-2"></i>Coding Profiles
+                                    <i class="bi bi-code-square me-2"></i>Other Profiles
                                 </h4>
                                 <div class="row g-4">
                                     <!-- LinkedIn Profile -->
