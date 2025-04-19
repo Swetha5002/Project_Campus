@@ -20,6 +20,7 @@ urlpatterns = [
     path('result/<str:paper_code>/', views.result, name='result'),
     path('about/', views.about, name='about'),
     path('batch/', views.batch, name='batch'),
+    path('section/', views.section, name='section'),
     path('test-mistakes/<str:paper_code>/', views.test_mistakes, name='test_mistakes'),
     path('test-mistakes/', views.test_mistakes, name='test_mistakes_all'),
     path('change_password/', auth_views.PasswordChangeView.as_view(

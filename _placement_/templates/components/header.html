@@ -63,6 +63,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'section' %}active{% endif %}" href="{% url 'section' %}">
+                        <i class="bi bi-info-circle me-1"></i> Section
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
                         <i class="bi bi-info-circle me-1"></i> About
                     </a>

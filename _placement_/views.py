@@ -13,6 +13,9 @@ from django.http import Http404, HttpResponse, JsonResponse
 import csv
 from django.contrib.auth.views import PasswordResetView
 from django.db import IntegrityError
+from django.db.models import F, Q
+from django.core.paginator import Paginator
+from django.db import models  # Add this import
 
 # Create your views here.
 def signup(request):
@@ -218,8 +221,96 @@ def result(request, paper_code):
 
     messages.error(request, 'Invalid request.')
     return redirect('home')
+
+@login_required
 def batch(request):
-    return render(request, 'index_html/batch.html')
+    # Get the current user's batch
+    user_batch = request.user.batch
+
+    if not user_batch:
+        messages.error(request, "You are not assigned to any batch.")
+        return redirect('home')
+
+    # Fetch all batchmates
+    batchmates = User.objects.filter(batch=user_batch).order_by('name')
+
+    # Sorting logic
+    sort_by = request.GET.get('sort', 'name')
+    if sort_by == 'dsa':
+        batchmates = batchmates.order_by('-dsa_problem_solved_count', 'name')
+    elif sort_by == 'percentage':
+        batchmates = batchmates.order_by('-average_percentage', 'name')
+
+    # Fetch top 20 performers based on DSA count and average percentage
+    top_20_users = batchmates.order_by(
+        F('dsa_problem_solved_count').desc(nulls_last=True),
+        F('average_percentage').desc(nulls_last=True)
+    )[:20]
+
+    # Pagination for batchmates
+    paginator = Paginator(batchmates, 10)  # Show 10 batchmates per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Context for the template
+    context = {
+        'batchmates': page_obj,
+        'top_20_users': top_20_users,
+        'sort_by': sort_by,
+        'total_students': batchmates.count(),
+        'avg_dsa': batchmates.aggregate(avg_dsa=models.Avg('dsa_problem_solved_count'))['avg_dsa'] or 0,
+        'top_dsa_user': batchmates.order_by('-dsa_problem_solved_count').first(),
+        'top_dsa_count': batchmates.aggregate(max_dsa=models.Max('dsa_problem_solved_count'))['max_dsa'] or 0,
+        'top_percentage_user': batchmates.order_by('-average_percentage').first(),
+        'top_percentage': batchmates.aggregate(max_percentage=models.Max('average_percentage'))['max_percentage'] or 0,
+    }
+
+    return render(request, 'index_html/batch.html', context)
+
+@login_required
+def section(request):
+    # Get the current user's section
+    user_section = request.user.section
+
+    if not user_section:
+        messages.error(request, "You are not assigned to any section.")
+        return redirect('home')
+
+    # Fetch all sectionmates
+    sectionmates = User.objects.filter(section=user_section).order_by('name')
+
+    # Sorting logic
+    sort_by = request.GET.get('sort', 'name')
+    if sort_by == 'dsa':
+        sectionmates = sectionmates.order_by('-dsa_problem_solved_count', 'name')
+    elif sort_by == 'percentage':
+        sectionmates = sectionmates.order_by('-average_percentage', 'name')
+
+    # Fetch top 10 performers based on DSA count and average percentage
+    top_10_users = sectionmates.order_by(
+        F('dsa_problem_solved_count').desc(nulls_last=True),
+        F('average_percentage').desc(nulls_last=True)
+    )[:10]
+
+    # Pagination for sectionmates
+    paginator = Paginator(sectionmates, 10)  # Show 10 sectionmates per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Context for the template
+    context = {
+        'sectionmates': page_obj,
+        'top_10_users': top_10_users,
+        'sort_by': sort_by,
+        'total_students': sectionmates.count(),
+        'avg_dsa': sectionmates.aggregate(avg_dsa=models.Avg('dsa_problem_solved_count'))['avg_dsa'] or 0,
+        'top_dsa_user': sectionmates.order_by('-dsa_problem_solved_count').first(),
+        'top_dsa_count': sectionmates.aggregate(max_dsa=models.Max('dsa_problem_solved_count'))['max_dsa'] or 0,
+        'top_percentage_user': sectionmates.order_by('-average_percentage').first(),
+        'top_percentage': sectionmates.aggregate(max_percentage=models.Max('average_percentage'))['max_percentage'] or 0,
+    }
+
+    return render(request, 'index_html/section.html', context)
 
 def get_sections(request):
     batch_id = request.GET.get('batch_id')
@@ -266,4 +357,4 @@ def refresh_dsa_count(request):
             'success': False,
             'message': f'Error updating DSA count: {str(e)}'
         }, status=500)
-    
+
