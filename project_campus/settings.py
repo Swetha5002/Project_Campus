@@ -79,11 +79,11 @@ DATABASES = {
          'ENGINE': 'django.db.backends.mysql',
          'NAME': '_placement_sql',
          'USER': 'root',
-         'PASSWORD': 'vimal',
+         'PASSWORD': 'Ssweth@',
          'HOST': 'localhost',
          'PORT': '3306',
          'OPTIONS': {
-             'charset': 'utf8mb4',
+         'charset': 'utf8mb4',
          },
      }
  }
