@@ -2,6 +2,9 @@ from datetime import timezone
 from datetime import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+
+from _placement_ import Scraper
+from _placement_.Scraper import update_user_dsa_count
 from .models import MistakenQuestion, User, StudentResults, PlacementStories, Section  # Added Class model and Section
 from .forms import PaperCodeForm, UserForm
 from django.contrib import messages
@@ -160,12 +163,12 @@ def result(request, paper_code):
         score = 0
         mistaken_questions = []
         
+        # Calculate score and collect mistaken questions
         for question in paper.questions.all():
             user_answer = request.POST.get(f'question_{question.id}')
             if user_answer == question.correct_option:
                 score += question.mark
             else:
-                # Store mistaken question
                 mistaken_questions.append(
                     MistakenQuestion(
                         user=request.user,
@@ -176,16 +179,14 @@ def result(request, paper_code):
                     )
                 )
         
-        # Bulk create mistaken questions
-        if mistaken_questions:
-            MistakenQuestion.objects.bulk_create(mistaken_questions)
-        
+        # Calculate result metrics
         time_taken = int(request.POST.get('time_taken', 0))
         total_marks = paper.total_marks or 0
         percentage = (score / total_marks) * 100 if total_marks > 0 else 0
         malpractice = request.POST.get('malpractice', 'false') == 'true'
 
-        StudentResults.objects.update_or_create(
+        # Create or update StudentResults
+        result_obj, created = StudentResults.objects.update_or_create(
             user=request.user,
             test_code=paper_code,
             defaults={
@@ -197,6 +198,12 @@ def result(request, paper_code):
                 'time': timezone.now().time(),
             }
         )
+        
+        # Associate and save mistaken questions
+        if mistaken_questions:
+            for mistake in mistaken_questions:
+                mistake.student_result = result_obj
+            MistakenQuestion.objects.bulk_create(mistaken_questions)
 
         context = {
             'paper': paper,
@@ -240,3 +247,12 @@ def get_sections(request):
     batch_id = request.GET.get('batch_id')
     sections = Section.objects.filter(batch_id=batch_id).values('id', 'name')
     return JsonResponse({'sections': list(sections)})
+
+
+
+@login_required
+def refresh_dsa_count(request):
+    update_user_dsa_count(request.user)
+    
+    
+    

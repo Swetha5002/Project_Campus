@@ -35,7 +35,13 @@
                 {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'assessments' %}active{% endif %}" href="{% url 'assessments' %}">
-                        <i class="bi bi-clipboard-check me-1"></i> Assessments
+                        <i class="bi bi-clipboard-check me-1"></i>
+                        
+                        {% if request.user.is_superuser %}
+                            Preview Of Assessment
+                        {% else %}
+                             Assessments
+                        {% endif %}
                     </a>
                 </li>
                 <li class="nav-item">

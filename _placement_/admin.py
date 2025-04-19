@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import User, StudentResults, PlacementStories, QuestionPaper, Question, Material, Batch, Section
+from _placement_ import models
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -93,3 +94,5 @@ class MaterialAdmin(admin.ModelAdmin):
     list_display = ('title', 'uploaded_at')
     list_filter = ('uploaded_at',)
     search_fields = ('title',)
+    
+    admin.site.register(models.MistakenQuestion)
