@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mistakes Review - {{paper.paper_code}}</title>
+    <link rel="icon" href="{% static 'images/favicon.jpeg' %}" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --correct-color: #28a745;
+            --wrong-color: #dc3545;
+            --doubt-color: #ffc107;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #6c8eff;
+            --correct-color: #3dd47a;
+            --wrong-color: #ff6b6b;
+            --doubt-color: #ffd351;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .header {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .mistake-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--wrong-color);
+            transition: all 0.3s ease;
+        }
+        
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s;
+        }
+        
+        .correct-option {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid var(--correct-color);
+        }
+        
+        .selected-option {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid var(--wrong-color);
+        }
+        
+        .explanation-box {
+            background-color: rgba(13, 110, 253, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats-box {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">🌑</button>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header text-center">
+            <h1>📝 Mistakes Review</h1>
+            <h3>{{ paper.paper_title }} ({{ paper.paper_code }})</h3>
+        </div>
+        
+        <!-- Stats Summary -->
+        <div class="stats-box">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><span class="badge bg-primary">Total Questions</span></h5>
+                    <p>{{ paper.no_of_qs }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h5><span class="badge bg-danger">Mistakes</span></h5>
+                    <p>{{ mistaken_questions|length }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h5><span class="badge bg-success">Accuracy</span></h5>
+                    <p>{{ accuracy_percentage }}%</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mistaken Questions List -->
+        {% if mistaken_questions %}
+            {% for mistake in mistaken_questions %}
+            <div class="mistake-card p-4">
+                <div class="question-header mb-4">
+                    <h4>Question {{ forloop.counter }}</h4>
+                    {% if mistake.question.question_image %}
+                        <img src="{{ mistake.question.question_image.url }}" alt="Question image" class="question-image img-fluid">
+                    {% endif %}
+                    <div class="question-text mb-3">
+                        <pre style="white-space: pre-wrap; font-family: inherit;"><code>{{ mistake.question.question_text }}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="options-container">
+                    <h5>Options:</h5>
+                    <div class="option {% if mistake.question.correct_option == 'A' %}correct-option{% endif %} {% if mistake.selected_option == 'A' %}selected-option{% endif %}">
+                        <strong>A)</strong> {{ mistake.question.option_A }}
+                        {% if mistake.question.correct_option == 'A' %}<span class="badge bg-success float-end">Correct</span>{% endif %}
+                        {% if mistake.selected_option == 'A' %}<span class="badge bg-danger float-end">Your Answer</span>{% endif %}
+                    </div>
+                    
+                    <div class="option {% if mistake.question.correct_option == 'B' %}correct-option{% endif %} {% if mistake.selected_option == 'B' %}selected-option{% endif %}">
+                        <strong>B)</strong> {{ mistake.question.option_B }}
+                        {% if mistake.question.correct_option == 'B' %}<span class="badge bg-success float-end">Correct</span>{% endif %}
+                        {% if mistake.selected_option == 'B' %}<span class="badge bg-danger float-end">Your Answer</span>{% endif %}
+                    </div>
+                    
+                    <div class="option {% if mistake.question.correct_option == 'C' %}correct-option{% endif %} {% if mistake.selected_option == 'C' %}selected-option{% endif %}">
+                        <strong>C)</strong> {{ mistake.question.option_C }}
+                        {% if mistake.question.correct_option == 'C' %}<span class="badge bg-success float-end">Correct</span>{% endif %}
+                        {% if mistake.selected_option == 'C' %}<span class="badge bg-danger float-end">Your Answer</span>{% endif %}
+                    </div>
+                    
+                    <div class="option {% if mistake.question.correct_option == 'D' %}correct-option{% endif %} {% if mistake.selected_option == 'D' %}selected-option{% endif %}">
+                        <strong>D)</strong> {{ mistake.question.option_D }}
+                        {% if mistake.question.correct_option == 'D' %}<span class="badge bg-success float-end">Correct</span>{% endif %}
+                        {% if mistake.selected_option == 'D' %}<span class="badge bg-danger float-end">Your Answer</span>{% endif %}
+                    </div>
+                </div>
+                
+                {% if mistake.question.explanation %}
+                <div class="explanation-box">
+                    <h5>Explanation:</h5>
+                    <p>{{ mistake.question.explanation }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <small class="text-muted">Mistake made on: {{ mistake.date|date:"F j, Y H:i" }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info text-center">
+                <h4>🎉 No Mistakes Found!</h4>
+                <p>You answered all questions correctly in this test.</p>
+            </div>
+        {% endif %}
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'profile' %}" class="back-btn">Back to Assessments</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌑';
+            localStorage.setItem('theme', currentTheme);
+        }
+        
+        applyTheme();
+        
+        themeToggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+        });
+    </script>
+</body>
+</html>

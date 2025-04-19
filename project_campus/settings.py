@@ -75,18 +75,18 @@ WSGI_APPLICATION = 'project_campus.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '_placement_sql',
-        'USER': 'root',
-        'PASSWORD': 'Ssweth@',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
-    }
-}
+     'default': {
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': '_placement_sql',
+         'USER': 'root',
+         'PASSWORD': 'vimal',
+         'HOST': 'localhost',
+         'PORT': '3306',
+         'OPTIONS': {
+             'charset': 'utf8mb4',
+         },
+     }
+ }
 
 
 # Password validation

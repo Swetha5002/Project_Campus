@@ -323,3 +323,16 @@ def assign_user_to_batch_group(sender, instance, created, **kwargs):
 def delete_story_image(sender, instance, **kwargs):
     if instance.image and os.path.isfile(instance.image.path):
         os.remove(instance.image.path)
+        
+        
+# models.py
+class MistakenQuestion(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)  # Assuming you have a Question model
+    test_code = models.CharField(max_length=100)
+    selected_option = models.CharField(max_length=255)
+    correct_option = models.CharField(max_length=255)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'question', 'test_code')

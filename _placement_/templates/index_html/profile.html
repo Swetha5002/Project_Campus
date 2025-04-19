@@ -23,8 +23,8 @@
         <div class="container">
             <!-- Enhanced Profile Section -->
             <div class="profile-container bg-white rounded-4 shadow p-3 p-md-4 mb-4 position-relative">
-                <button class="profile-edit-btn btn btn-primary rounded-circle position-absolute top-0 end-0 m-3" 
-                        title="Edit Profile" onclick="window.location.href=''">
+                <button class="profile-edit-btn btn btn-primary rounded-circle position-absolute top-0 end-0 m-3"
+                    title="Edit Profile" onclick="window.location.href=''">
                     <i class="bi bi-pencil"></i>
                 </button>
 
@@ -33,11 +33,13 @@
                     <div class="col-md-4 text-center p-5">
                         <div class="profile-picture mb-5">
                             {% if user.profile_image %}
-                            <img src="{{ user.profile_image.url }}" alt="Profile Picture" 
-                                 class="img-fluid rounded-circle border border-4 border-primary" style="width: 200px; height: 200px; object-fit: cover;">
+                            <img src="{{ user.profile_image.url }}" alt="Profile Picture"
+                                class="img-fluid rounded-circle border border-4 border-primary"
+                                style="width: 200px; height: 200px; object-fit: cover;">
                             {% else %}
-                            <img src="{% static 'images/profile_no.png' %}" alt="Profile" 
-                                 class="img-fluid rounded-circle border border-4 border-primary" style="width: 200px; height: 200px; object-fit: cover;">
+                            <img src="{% static 'images/profile_no.png' %}" alt="Profile"
+                                class="img-fluid rounded-circle border border-4 border-primary"
+                                style="width: 200px; height: 200px; object-fit: cover;">
                             {% endif %}
                         </div>
                         <h3 class="profile-name text-dark fw-bold">{{ user.name }}</h3>
@@ -46,9 +48,9 @@
                                 {{ user.section }}
                             </span>
                         </div>
-                        
+
                         <!-- Stats Cards -->
-                        
+
                     </div>
 
                     <!-- Profile Details Column -->
@@ -63,7 +65,7 @@
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-person-badge me-2 text-secondary"></i>
                                         <div>
-                                            <strong class="text-secondary">University No:</strong> 
+                                            <strong class="text-secondary">University No:</strong>
                                             <span>{{ request.user.university_number }}</span>
                                         </div>
                                     </div>
@@ -72,7 +74,7 @@
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-calendar-event me-2 text-secondary"></i>
                                         <div>
-                                            <strong class="text-secondary">DOB:</strong> 
+                                            <strong class="text-secondary">DOB:</strong>
                                             <span>{{ user.date_of_birth }}</span>
                                         </div>
                                     </div>
@@ -81,7 +83,7 @@
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-envelope me-2 text-secondary"></i>
                                         <div>
-                                            <strong class="text-secondary">Email:</strong> 
+                                            <strong class="text-secondary">Email:</strong>
                                             <span>{{ user.email }}</span>
                                         </div>
                                     </div>
@@ -90,7 +92,7 @@
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-telephone me-2 text-secondary"></i>
                                         <div>
-                                            <strong class="text-secondary">Phone:</strong> 
+                                            <strong class="text-secondary">Phone:</strong>
                                             <span>{{ user.phone_number }}</span>
                                         </div>
                                     </div>
@@ -99,7 +101,7 @@
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-graph-up me-2 text-secondary"></i>
                                         <div>
-                                            <strong class="text-secondary">CGPA:</strong> 
+                                            <strong class="text-secondary">CGPA:</strong>
                                             <span>{{ user.cgpa }}</span>
                                         </div>
                                     </div>
@@ -108,7 +110,7 @@
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-award me-2 text-secondary"></i>
                                         <div>
-                                            <strong class="text-secondary">DSA count:</strong> 
+                                            <strong class="text-secondary">DSA count:</strong>
                                             <span>{{ user.dsa_count }}</span>
                                         </div>
                                     </div>
@@ -130,16 +132,18 @@
                                                 </div>
                                                 <h5 class="fw-bold mb-3">LinkedIn</h5>
                                                 {% if user.linkedin_link %}
-                                                <a href="{{ user.linkedin_link }}" class="btn btn-linkedin btn-sm w-75" target="_blank">
+                                                <a href="{{ user.linkedin_link }}" class="btn btn-linkedin btn-sm w-75"
+                                                    target="_blank">
                                                     View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
                                                 {% else %}
-                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not
+                                                    connected</span>
                                                 {% endif %}
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- LeetCode Profile -->
                                     <div class="col-md-6 col-lg-3">
                                         <div class="platform-card leetcode-card h-100 transition-all hover-scale">
@@ -149,17 +153,20 @@
                                                 </div>
                                                 <h5 class="fw-bold mb-3">LeetCode</h5>
                                                 {% if user.code_platforms.0 %}
-                                                <a href="{{ user.code_platforms.0.link }}" class="btn btn-leetcode btn-sm w-75" target="_blank">
+                                                <a href="{{ user.leetcode_link }}"
+                                                    class="btn btn-leetcode btn-sm w-75" target="_blank">
                                                     View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
-                                                <p class="small mt-2 mb-0">{{ user.code_platforms.0.problems_solved }} problems solved</p>
+                                                <p class="small mt-2 mb-0">{{ user.code_platforms.0.problems_solved }}
+                                                    problems solved</p>
                                                 {% else %}
-                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not
+                                                    connected</span>
                                                 {% endif %}
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- GeeksforGeeks Profile -->
                                     <div class="col-md-6 col-lg-3">
                                         <div class="platform-card gfg-card h-100 transition-all hover-scale">
@@ -168,18 +175,21 @@
                                                     <i class="bi bi-laptop text-white fs-4"></i>
                                                 </div>
                                                 <h5 class="fw-bold mb-3">GeeksforGeeks</h5>
-                                                {% if user.code_platforms.2 %}
-                                                <a href="{{ user.code_platforms.2.link }}" class="btn btn-gfg btn-sm w-75" target="_blank">
+                                                {% if user.codechef_link %}
+                                                <a href="{{ user.codechef_link }}"
+                                                    class="btn btn-gfg btn-sm w-75" target="_blank">
                                                     View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
-                                                <p class="small mt-2 mb-0">{{ user.code_platforms.2.problems_solved }} problems solved</p>
+                                                <p class="small mt-2 mb-0">{{ user.code_platforms.2.problems_solved }}
+                                                    problems solved</p>
                                                 {% else %}
-                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not
+                                                    connected</span>
                                                 {% endif %}
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- HackerRank Profile -->
                                     <div class="col-md-6 col-lg-3">
                                         <div class="platform-card hackerrank-card h-100 transition-all hover-scale">
@@ -189,12 +199,15 @@
                                                 </div>
                                                 <h5 class="fw-bold mb-3">HackerRank</h5>
                                                 {% if user.code_platforms.3 %}
-                                                <a href="{{ user.code_platforms.3.link }}" class="btn btn-hackerrank btn-sm w-75" target="_blank">
+                                                <a href="{{ user.hackerrank_link }}"
+                                                    class="btn btn-hackerrank btn-sm w-75" target="_blank">
                                                     View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
-                                                <p class="small mt-2 mb-0">{{ user.code_platforms.3.problems_solved }} problems solved</p>
+                                                <p class="small mt-2 mb-0">{{ user.code_platforms.3.problems_solved }}
+                                                    problems solved</p>
                                                 {% else %}
-                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not connected</span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">Not
+                                                    connected</span>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -212,7 +225,7 @@
                     <h3 class="text-dark fw-bold border-bottom border-3 border-primary pb-2 mb-3">
                         <i class="bi bi-clock-history me-2"></i>Test History
                     </h3>
-                    
+
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead class="table-primary">
@@ -240,10 +253,14 @@
                                         {{ result.get_status_display }}
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary view-details" 
-                                                data-test-id="{{ result.id }}">
-                                            View <i class="bi bi-chevron-right"></i>
-                                        </button>
+                                        <!-- Add this somewhere in your result.html -->
+                                        {% if result.test_code %}
+                                        <!-- Assuming you have a result object with test_code -->
+                                        <a href="{% url 'test_mistakes' paper_code=result.test_code %}"
+                                            class="btn btn-info">
+                                            Review Mistakes
+                                        </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% empty %}
