@@ -93,8 +93,8 @@
                                         <i class="bi bi-telephone me-2 text-secondary"></i>
                                         <div>
                                             <strong class="text-secondary">Phone:</strong>
-                                            <span>{{ user.phone_number }}</span>
-                                        </div>
+                                            <span >{{ user.phone_number }}</span>
+                                        </div> 
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-4">
@@ -107,14 +107,65 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-md-4">
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-award me-2 text-secondary"></i>
-                                        <div>
-                                            <strong class="text-secondary">DSA count:</strong>
-                                            <span>{{ user.dsa_count }}</span>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <i  class="bi bi-award me-2 text-secondary"></i>
+                                            <div>
+                                                <strong class="text-secondary">Problems Count:</strong>
+                                                <span id="dsa-count">{{ user.dsa_problem_solved_count }}</span>
+                                            </div>
                                         </div>
+                                        <button id="refresh-dsa" class="btn btn-sm btn-outline-secondary" 
+                                                title="Refresh DSA count (then refresh the page)" data-bs-toggle="tooltip">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
                                     </div>
                                 </div>
+                                
+                                <script>
+                                // Initialize tooltips
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    // Initialize Bootstrap tooltips
+                                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                                    tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                        return new bootstrap.Tooltip(tooltipTriggerEl)
+                                    });
+                                
+                                    // Add click handler for refresh button
+                                    document.getElementById('refresh-dsa').addEventListener('click', function() {
+                                        const btn = this;
+                                        const countSpan = document.getElementById('dsa-count');
+                                        
+                                        // Show loading state
+                                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                                        btn.disabled = true;
+                                        
+                                        fetch('{% url "refresh_dsa_count" %}')
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    countSpan.textContent = data.count;
+                                                   
+                                                    btn.innerHTML = '<i class="fas fa-check"></i>';
+                                                    setTimeout(() => {
+                                                        btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                                                        btn.disabled = false;
+                                                    }, 3000);
+                                                } else {
+                                                    btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                                                    btn.disabled = false;
+                                                    
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                                btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                                                btn.disabled = false;
+                                                
+                                            });
+                                    });
+                                });
+                                </script>
                             </div>
 
                             <!-- Coding Profiles Section -->
@@ -152,13 +203,11 @@
                                                     <i class="bi bi-code-slash text-white fs-4"></i>
                                                 </div>
                                                 <h5 class="fw-bold mb-3">LeetCode</h5>
-                                                {% if user.code_platforms.0 %}
-                                                <a href="{{ user.leetcode_link }}"
+                                                {% if user.leetcode_link %}
+                                                <a href="https://leetcode.com/u/{{ user.leetcode_link }}/"
                                                     class="btn btn-leetcode btn-sm w-75" target="_blank">
                                                     View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
-                                                <p class="small mt-2 mb-0">{{ user.code_platforms.0.problems_solved }}
-                                                    problems solved</p>
                                                 {% else %}
                                                 <span class="badge bg-secondary bg-opacity-10 text-secondary">Not
                                                     connected</span>
@@ -175,13 +224,11 @@
                                                     <i class="bi bi-laptop text-white fs-4"></i>
                                                 </div>
                                                 <h5 class="fw-bold mb-3">GeeksforGeeks</h5>
-                                                {% if user.codechef_link %}
-                                                <a href="{{ user.codechef_link }}"
+                                                {% if user.gfg_link %}
+                                                <a href="https://auth.geeksforgeeks.org/user/{{ user.gfg_link }}/"
                                                     class="btn btn-gfg btn-sm w-75" target="_blank">
                                                     View Profile <i class="bi bi-box-arrow-up-right ms-1"></i>
                                                 </a>
-                                                <p class="small mt-2 mb-0">{{ user.code_platforms.2.problems_solved }}
-                                                    problems solved</p>
                                                 {% else %}
                                                 <span class="badge bg-secondary bg-opacity-10 text-secondary">Not
                                                     connected</span>
@@ -257,7 +304,7 @@
                                         {% if result.test_code %}
                                         <!-- Assuming you have a result object with test_code -->
                                         <a href="{% url 'test_mistakes' paper_code=result.test_code %}"
-                                            class="btn btn-info">
+                                            class="btn btn-info" >
                                             Review Mistakes
                                         </a>
                                         {% endif %}

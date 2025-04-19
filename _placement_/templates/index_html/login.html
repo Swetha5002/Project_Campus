@@ -1,50 +1,56 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>VCET - ECE</title>
-    {% load static %}
-    <link rel="icon" href="{% static 'images/favicon.jpeg' %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCET - Login</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% include 'components/links.html' %}
 </head>
 
-<body onload="showSection('home')" style="background: white;">
+<body>
+    {% include 'components/header.html' %}
 
-    <nav class="navbar background1">        
-        <div class="logo">
-            <img src="{% static 'images/Vcet_logo.png' %}" alt="VCET Logo">
-        </div>
-        <div class="center">
-        <h2>VELAMMAL COLLEGE OF ENGINEERING AND TECHNOLOGY</h2>
-        <h5>Department of Electronics and Communication Engineering</h5>
-        </div>
-
-        <div>
-            
-        </div>
-        <a href="{% url 'home' %}" class="fullscreen-btn" style="height: max-content; width: max-content; padding: 5px; background-color : rgb(0, 0, 70); color: rgb(255, 255, 255); border: none; border-radius: 5px; text-decoration:none">
-            Back
-        </a>
-
-    </nav>
-
-    <div class="content_border">
-        <div class="login-wrapper">
-            <!-- login.html -->
-
-            <div class="login-card">
-                <h2 style="font-family: poppins;">Login</h2>
-                <form method='POST' action="{% url 'login' %}">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    
-                    <button type="submit" class="btn">Login</button>
-                </form>
-            </div>
+    <!-- Main Content -->
+    <div class="login-container">
+        <div class="login-card">
+            <h2><i class="fas fa-sign-in-alt me-2"></i>Login</h2>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_username">Roll Number ( for admin use username )</label>
+                    <input type="text" name="username" id="id_username" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <input type="password" name="password" id="id_password" class="form-control" required>
+                    <div class="forgot-password">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                </div>
+                
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    Invalid username or password. Please try again.
+                </div>
+                {% endif %}
+                
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+            </form>
         </div>
     </div>
 
+    {% include 'components/footer.html' %}
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<script src="{% static 'js/base.js' %}"></script>
+
 </html>

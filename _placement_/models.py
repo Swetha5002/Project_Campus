@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 import os
 
+
 def get_current_year():
     return timezone.now().year
 
@@ -69,13 +70,16 @@ class User(AbstractUser):
         null=True
     )
     
+    dsa_problem_solved_count = models.PositiveIntegerField(default=0)
+    dsa_last_updated = models.DateTimeField(null=True, blank=True)
+    leetcode_link = models.TextField(max_length=200, blank=True, null=True, verbose_name="LeetCode Profile")
+    gfg_link = models.TextField(max_length=200, blank=True, null=True, verbose_name="GeeksforGeeks Profile")
+    
     # Professional Information
     linkedin_link = models.URLField(max_length=200, blank=True, null=True)
     
     # Coding Platform Links (separate fields)
-    leetcode_link = models.URLField(max_length=200, blank=True, null=True, verbose_name="LeetCode Profile")
-    codechef_link = models.URLField(max_length=200, blank=True, null=True, verbose_name="CodeChef Profile")
-    hackerrank_link = models.URLField(max_length=200, blank=True, null=True, verbose_name="HackerRank Profile")
+    hackerrank_link = models.TextField(max_length=200, blank=True, null=True, verbose_name="HackerRank Profile")
 
     class Meta:
         verbose_name = 'User'
@@ -327,14 +331,29 @@ def delete_story_image(sender, instance, **kwargs):
         os.remove(instance.image.path)
         
         
-# models.py
+
 class MistakenQuestion(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)  # Assuming you have a Question model
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     test_code = models.CharField(max_length=100)
     selected_option = models.CharField(max_length=255)
     correct_option = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now_add=True)
+    student_result = models.ForeignKey(
+        StudentResults, 
+        on_delete=models.CASCADE, 
+        related_name='mistaken_questions',
+        null=True,
+        blank=True
+    )
     
     class Meta:
         unique_together = ('user', 'question', 'test_code')
+        
+@receiver(post_delete, sender=StudentResults)
+def delete_related_mistakes(sender, instance, **kwargs):
+    # Delete all MistakenQuestion records for this user and test_code
+    MistakenQuestion.objects.filter(
+        user=instance.user,
+        test_code=instance.test_code
+    ).delete()

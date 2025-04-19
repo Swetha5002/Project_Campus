@@ -30,6 +30,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='index_html/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='index_html/logout.html'), name='logout'),
     path('get_sections/', views.get_sections, name='get_sections'),
+    path('refresh-dsa-count/', views.refresh_dsa_count, name='refresh_dsa_count'),
 ]
 
 if settings.DEBUG:

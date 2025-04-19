@@ -1,80 +1,105 @@
+:root {
+    --vcet-dark: #27374D;
+    --vcet-gray: #526D82;
+    --vcet-teal: #9DB2BF;
+    --vcet-light: #DDE6ED;
+    --vcet-blue: #1A3E72;
+}
 
-.login-wrapper {
+body {
+    background-color: var(--vcet-light);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+}
+
+.login-container {
+    flex: 1;
+    display: flex;
     align-items: center;
-    width: 100%;
-    height: 100%;
+    justify-content: center;
+    padding: 2rem;
 }
 
 .login-card {
-    background: rgba(255, 255, 255, 0.822);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-    text-align: center;
-    width: 350px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(39, 55, 77, 0.1);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 450px;
+    border-top: 5px solid var(--vcet-blue);
 }
 
 .login-card h2 {
-    
-    font-size: 28px;
-    margin-bottom: 10px;
-    color: #010101;
+    color: var(--vcet-dark);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
+.form-group {
+    margin-bottom: 1.5rem;
+}
 
+.form-group label {
+    color: var(--vcet-gray);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
 
-.btn {
-    width: 100%;
-    padding: 12px;
-    background: rgb(0, 0, 70);
-    color: #f8f5f5;
-    font-size: 16px;
-    font-weight: bold;
+.form-control {
+    border: 1px solid var(--vcet-teal);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--vcet-blue);
+    box-shadow: 0 0 0 0.2rem rgba(26, 62, 114, 0.15);
+}
+
+.btn-login {
+    background-color: var(--vcet-blue);
+    color: white;
     border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background 0.3s;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
 }
 
-.btn:hover {
-    background: rgba(0, 0, 70, 0.17);
-    border: 2px solid rgb(0, 0, 70);
-    color: rgb(0, 0, 70);
+.btn-login:hover {
+    background-color: var(--vcet-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 55, 77, 0.2);
 }
 
-p > input {
-    padding: 5px;
-    margin-bottom: 10px;
-    font-size: larger;
-    width: 200px;
-    border-radius: 7px;
-    border: 1px solid black;
-    
-}
-p > label {
-    width: 100px;
-    font-size: large;
-    margin-bottom: 5px;
-    font-family: poppins;
-}
-p > fieldset {
-    border: 7px solid red;
-    background-color: red;
-}
-.errorlist {
-    font-family: poppins;
-    color: rgb(0, 0, 0);
-    font-size: medium;
-    border-radius: 5px;
-    border: 1px solid red;
-    background-color: rgb(255, 133, 133);
-    padding: 10px;
-    text-align: left;
-    margin: 10px;
-    list-style-type: none;
+.forgot-password {
+    text-align: right;
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
 }
 
+.forgot-password a {
+    color: var(--vcet-gray);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
 
+.forgot-password a:hover {
+    color: var(--vcet-blue);
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+}
