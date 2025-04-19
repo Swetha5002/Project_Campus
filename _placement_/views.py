@@ -11,17 +11,27 @@ from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.http import Http404, HttpResponse, JsonResponse
 import csv
+from django.contrib.auth.views import PasswordResetView
+from django.db import IntegrityError
 
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password1'])  # Set the password
-            user.save()
-            messages.success(request, 'Signup successful! Please log in.')
-            return redirect('login')
+            try:
+                user = form.save(commit=False)
+                user.set_password(form.cleaned_data['password1'])  # Set the password
+                user.save()
+                messages.success(request, 'Signup successful! Please log in.')
+                return redirect('login')
+            except IntegrityError as e:
+                if 'email' in str(e):
+                    form.add_error('email', 'This email is already registered. Please use a different email address.')
+                elif 'username' in str(e):
+                    form.add_error('username', 'This username is already taken. Please choose a different one.')
+                else:
+                    messages.error(request, 'An error occurred during signup. Please try again.')
     else:
         form = UserForm()
     return render(request, 'index_html/signup.html', {'form': form})
@@ -210,6 +220,11 @@ def result(request, paper_code):
     return redirect('home')
 def batch(request):
     return render(request, 'index_html/batch.html')
+
+def get_sections(request):
+    batch_id = request.GET.get('batch_id')
+    sections = Section.objects.filter(batch_id=batch_id).values('id', 'name')
+    return JsonResponse({'sections': list(sections)})
 
 def test_mistakes(request, paper_code):
     if not request.user.is_authenticated:
